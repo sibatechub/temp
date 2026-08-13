@@ -110,53 +110,30 @@ html,body{
 
 .sidebar{
 
-
-
-
    width:270px;
-
-
-
 
    min-width:270px;
 
-
-
+   height:100vh;
 
    background:#2E2278;
 
-
-
-
    color:#fff;
-
-
-
 
    display:flex;
 
-
-
-
    flex-direction:column;
-
-
-
 
    justify-content:space-between;
 
-
-
-
    transition:.3s;
-
-
-
 
    box-shadow:5px 0 20px rgba(0,0,0,.08);
 
+   /* Allow sidebar to scroll */
+   overflow-y:auto;
 
-
+   overflow-x:hidden;
 
 }
 
@@ -526,13 +503,42 @@ html,body{
 
 .sidebar-bottom{
 
-
-
-
    padding:20px;
 
+   margin-top:auto;
 
+   flex-shrink:0;
 
+   background:#2E2278;
+
+}
+/*==================================================
+               SIDEBAR SCROLLBAR
+==================================================*/
+
+.sidebar::-webkit-scrollbar{
+
+   width:6px;
+
+}
+
+.sidebar::-webkit-scrollbar-track{
+
+   background:#2E2278;
+
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+
+   background:rgba(255,255,255,.25);
+
+   border-radius:20px;
+
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover{
+
+   background:rgba(255,255,255,.45);
 
 }
 
@@ -992,6 +998,147 @@ html,body{
 
 
 
+
+}
+/*==================================================
+        HEADER USER DROPDOWN
+==================================================*/
+
+.welcome-user{
+
+   position:relative;
+
+   cursor:pointer;
+
+}
+
+
+.welcome{
+
+   display:flex;
+
+   align-items:center;
+
+   gap:7px;
+
+   font-size:15px;
+
+   color:#444;
+
+   padding:10px 12px;
+
+   border-radius:10px;
+
+   transition:.25s;
+
+}
+
+
+.welcome:hover{
+
+   background:#EEF3FB;
+
+}
+
+
+.welcome b{
+
+   color:#2E2278;
+
+}
+
+
+.welcome i{
+
+   font-size:11px;
+
+   color:#777;
+
+   transition:.25s;
+
+}
+
+
+.header-user-dropdown{
+
+   position:absolute;
+
+   top:calc(100% + 8px);
+
+   right:0;
+
+   width:150px;
+
+   background:#fff;
+
+   border-radius:12px;
+
+   padding:8px;
+
+   box-shadow:0 12px 30px rgba(0,0,0,.15);
+
+   border:1px solid #eee;
+
+   display:none;
+
+   z-index:99999;
+
+}
+
+
+.welcome-user.active .header-user-dropdown{
+
+   display:block;
+
+}
+
+
+.welcome-user.active .welcome i{
+
+   transform:rotate(180deg);
+
+}
+
+
+#headerLogoutBtn{
+
+   width:100%;
+
+   border:none;
+
+   background:transparent;
+
+   color:#d63031;
+
+   padding:11px 12px;
+
+   border-radius:8px;
+
+   cursor:pointer;
+
+   text-align:left;
+
+   font-family:'Poppins',sans-serif;
+
+   font-size:14px;
+
+   font-weight:600;
+
+   transition:.25s;
+
+}
+
+
+#headerLogoutBtn:hover{
+
+   background:#fff0f0;
+
+}
+
+
+#headerLogoutBtn i{
+
+   margin-right:8px;
 
 }
 
