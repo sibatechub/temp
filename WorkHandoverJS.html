@@ -1,0 +1,1402 @@
+<script>
+
+/* =========================================================
+   WORK HANDOVER MODULE
+========================================================= */
+
+let workHandoverInitialized = false;
+
+let workHandoverData = {
+
+    user: null,
+    buildings: [],
+    technicians: []
+
+};
+
+
+/* =========================================================
+   GET SESSION TOKEN
+========================================================= */
+
+function getWorkHandoverSessionToken() {
+
+    const url = new URL(window.location.href);
+
+    let token = url.searchParams.get("token");
+
+    if (!token) {
+
+        token = sessionStorage.getItem("sessionToken");
+
+    }
+
+    return token;
+
+}
+
+
+/* =========================================================
+   INITIALIZE PAGE
+========================================================= */
+
+function initializeWorkHandoverPage() {
+
+    console.log("Initializing Work Handover...");
+
+    loadWorkHandoverForm();
+
+    loadWorkHandoverRecords();
+
+}
+
+
+/* =========================================================
+   LOAD FORM DATA
+========================================================= */
+
+function loadWorkHandoverForm() {
+
+    const token =
+        getWorkHandoverSessionToken();
+
+
+    if (!token) {
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "Session Expired",
+
+            text: "Please login again.",
+
+            confirmButtonColor: "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    const buildingSelect =
+        document.getElementById("handoverBuilding");
+
+
+    const technicianSelect =
+        document.getElementById("handoverOverrideTechnician");
+
+
+    buildingSelect.innerHTML =
+        `<option value="">Loading buildings...</option>`;
+
+
+    technicianSelect.innerHTML =
+        `<option value="">Loading technicians...</option>`;
+
+
+    google.script.run
+
+        .withSuccessHandler(function(data) {
+
+            console.log("Work Handover form data:", data);
+
+
+            if (!data) {
+
+                showWorkHandoverError(
+                    "Unable to load work handover information."
+                );
+
+                return;
+
+            }
+
+
+            workHandoverData = data;
+
+
+            /* -----------------------------------------
+               Original Technician
+            ----------------------------------------- */
+
+            document.getElementById(
+                "handoverOriginalTechnician"
+            ).value =
+                data.user
+                ? data.user.name
+                : "";
+
+
+            /* -----------------------------------------
+               Buildings
+            ----------------------------------------- */
+
+            populateHandoverBuildings(
+                data.buildings || []
+            );
+
+
+            /* -----------------------------------------
+               Technicians
+            ----------------------------------------- */
+
+            populateHandoverTechnicians(
+                data.technicians || []
+            );
+
+
+        })
+
+        .withFailureHandler(function(error) {
+
+            console.error(
+                "Work Handover load error:",
+                error
+            );
+
+
+            showWorkHandoverError(
+                error.message ||
+                "Unable to load work handover information."
+            );
+
+        })
+
+        .getWorkHandoverFormData(token);
+
+}
+
+
+/* =========================================================
+   POPULATE BUILDINGS
+========================================================= */
+
+function populateHandoverBuildings(buildings) {
+
+    const select =
+        document.getElementById("handoverBuilding");
+
+
+    select.innerHTML =
+        `<option value="">Select Building</option>`;
+
+
+    if (!buildings || buildings.length === 0) {
+
+        select.innerHTML =
+            `<option value="">
+                No building assigned
+            </option>`;
+
+        return;
+
+    }
+
+
+    buildings.forEach(function(building) {
+
+        const option =
+            document.createElement("option");
+
+
+        /*
+           We expect each building to contain:
+
+           {
+               building: "ITI"
+           }
+        */
+
+        option.value =
+            building.building;
+
+
+        option.textContent =
+            building.building;
+
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+/* =========================================================
+   POPULATE TECHNICIANS
+========================================================= */
+
+function populateHandoverTechnicians(technicians) {
+
+    const select =
+        document.getElementById(
+            "handoverOverrideTechnician"
+        );
+
+
+    select.innerHTML =
+        `<option value="">
+            Select Technician
+        </option>`;
+
+
+    if (!technicians || technicians.length === 0) {
+
+        select.innerHTML =
+            `<option value="">
+                No technician available
+            </option>`;
+
+        return;
+
+    }
+
+
+    technicians.forEach(function(technician) {
+
+        const option =
+            document.createElement("option");
+
+
+        /*
+           We expect:
+
+           {
+               name: "...",
+               email: "...",
+               mobile: "..."
+           }
+        */
+
+        option.value =
+            technician.name;
+
+
+        option.textContent =
+            technician.name;
+
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+/* =========================================================
+   BUILDING CHANGE
+========================================================= */
+
+document
+.getElementById("handoverBuilding")
+.addEventListener("change", function() {
+
+    const building =
+        this.value;
+
+
+    console.log(
+        "Selected building:",
+        building
+    );
+
+});
+
+
+/* =========================================================
+   TECHNICIAN CHANGE
+========================================================= */
+
+document
+.getElementById("handoverOverrideTechnician")
+.addEventListener("change", function() {
+
+    const technicianName =
+        this.value;
+
+
+    const emailInput =
+        document.getElementById(
+            "handoverOverrideEmail"
+        );
+
+
+    const mobileInput =
+        document.getElementById(
+            "handoverOverrideMobile"
+        );
+
+
+    emailInput.value = "";
+
+    mobileInput.value = "";
+
+
+    if (!technicianName) {
+
+        return;
+
+    }
+
+
+    /*
+       First check the technicians already
+       loaded into the page.
+    */
+
+    const technician =
+        workHandoverData.technicians.find(
+            function(item) {
+
+                return String(item.name)
+                    .trim()
+                    .toLowerCase()
+                    ===
+                    String(technicianName)
+                    .trim()
+                    .toLowerCase();
+
+            }
+        );
+
+
+    if (technician) {
+
+        emailInput.value =
+            technician.email || "";
+
+
+        mobileInput.value =
+            technician.mobile || "";
+
+
+        return;
+
+    }
+
+
+    /*
+       Fallback to server lookup.
+    */
+
+    google.script.run
+
+        .withSuccessHandler(function(data) {
+
+            if (!data) {
+
+                Swal.fire({
+
+                    icon: "error",
+
+                    title: "Technician Not Found",
+
+                    text:
+                        "Unable to find technician details.",
+
+                    confirmButtonColor:
+                        "#2E2278",
+
+                    heightAuto: false,
+
+                    scrollbarPadding: false
+
+                });
+
+                return;
+
+            }
+
+
+            emailInput.value =
+                data.email || "";
+
+
+            mobileInput.value =
+                data.mobile || "";
+
+        })
+
+        .withFailureHandler(function(error) {
+
+            console.error(error);
+
+
+            Swal.fire({
+
+                icon: "error",
+
+                title: "Unable to Load Details",
+
+                text:
+                    error.message ||
+                    "Technician details could not be loaded.",
+
+                confirmButtonColor:
+                    "#2E2278",
+
+                heightAuto: false,
+
+                scrollbarPadding: false
+
+            });
+
+        })
+
+        .getWorkHandoverTechnicianDetails(
+            getWorkHandoverSessionToken(),
+            technicianName
+        );
+
+});
+
+
+/* =========================================================
+   DATE VALIDATION
+========================================================= */
+
+document
+.getElementById("handoverStartDate")
+.addEventListener("change", function() {
+
+    validateHandoverDates();
+
+});
+
+
+document
+.getElementById("handoverEndDate")
+.addEventListener("change", function() {
+
+    validateHandoverDates();
+
+});
+
+
+function validateHandoverDates() {
+
+    const startDate =
+        document.getElementById(
+            "handoverStartDate"
+        ).value;
+
+
+    const endDate =
+        document.getElementById(
+            "handoverEndDate"
+        ).value;
+
+
+    if (!startDate || !endDate) {
+
+        return true;
+
+    }
+
+
+    if (endDate < startDate) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Invalid Date Range",
+
+            text:
+                "End Date cannot be earlier than Start Date.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+
+        document.getElementById(
+            "handoverEndDate"
+        ).value = "";
+
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+document
+.getElementById("btnResetHandover")
+.addEventListener("click", function() {
+
+    resetWorkHandoverForm();
+
+});
+
+
+function resetWorkHandoverForm() {
+
+    document.getElementById(
+        "handoverBuilding"
+    ).value = "";
+
+
+    document.getElementById(
+        "handoverOverrideTechnician"
+    ).value = "";
+
+
+    document.getElementById(
+        "handoverOverrideEmail"
+    ).value = "";
+
+
+    document.getElementById(
+        "handoverOverrideMobile"
+    ).value = "";
+
+
+    document.getElementById(
+        "handoverStartDate"
+    ).value = "";
+
+
+    document.getElementById(
+        "handoverEndDate"
+    ).value = "";
+
+
+    document.getElementById(
+        "handoverReason"
+    ).value = "";
+
+
+    /*
+       Original technician should NOT be reset.
+    */
+
+    if (workHandoverData.user) {
+
+        document.getElementById(
+            "handoverOriginalTechnician"
+        ).value =
+            workHandoverData.user.name || "";
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE HANDOVER
+========================================================= */
+
+document
+.getElementById("btnCreateHandover")
+.addEventListener("click", function() {
+
+    createWorkHandover();
+
+});
+
+
+function createWorkHandover() {
+
+    const building =
+        document.getElementById(
+            "handoverBuilding"
+        ).value;
+
+
+    const originalTechnician =
+        document.getElementById(
+            "handoverOriginalTechnician"
+        ).value;
+
+
+    const overrideTechnician =
+        document.getElementById(
+            "handoverOverrideTechnician"
+        ).value;
+
+
+    const overrideEmail =
+        document.getElementById(
+            "handoverOverrideEmail"
+        ).value;
+
+
+    const overrideMobile =
+        document.getElementById(
+            "handoverOverrideMobile"
+        ).value;
+
+
+    const startDate =
+        document.getElementById(
+            "handoverStartDate"
+        ).value;
+
+
+    const endDate =
+        document.getElementById(
+            "handoverEndDate"
+        ).value;
+
+
+    const reason =
+        document.getElementById(
+            "handoverReason"
+        ).value.trim();
+
+
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
+
+    if (!building) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Building Required",
+
+            text:
+                "Please select a building.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    if (!originalTechnician) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Technician Not Found",
+
+            text:
+                "Original technician information is missing.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    if (!overrideTechnician) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Technician Required",
+
+            text:
+                "Please select the technician who will handle the building.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    if (
+        String(originalTechnician)
+            .trim()
+            .toLowerCase()
+        ===
+        String(overrideTechnician)
+            .trim()
+            .toLowerCase()
+    ) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Invalid Technician",
+
+            text:
+                "You cannot assign the handover to yourself.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    if (!startDate) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Start Date Required",
+
+            text:
+                "Please select the handover start date.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    if (!endDate) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "End Date Required",
+
+            text:
+                "Please select the handover end date.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    if (endDate < startDate) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Invalid Date Range",
+
+            text:
+                "End Date cannot be earlier than Start Date.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    if (!overrideEmail || !overrideMobile) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Technician Details Missing",
+
+            text:
+                "Override technician email or mobile number could not be found.",
+
+            confirmButtonColor:
+                "#2E2278",
+
+            heightAuto: false,
+
+            scrollbarPadding: false
+
+        });
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       CONFIRMATION
+    ===================================================== */
+
+    Swal.fire({
+
+        icon: "question",
+
+        title: "Create Work Handover?",
+
+        html:
+            `<div style="text-align:left;font-size:14px;line-height:1.8">
+
+                <b>Building:</b> ${building}<br>
+
+                <b>From:</b> ${originalTechnician}<br>
+
+                <b>To:</b> ${overrideTechnician}<br>
+
+                <b>Start:</b> ${startDate}<br>
+
+                <b>End:</b> ${endDate}
+
+            </div>`,
+
+        showCancelButton: true,
+
+        confirmButtonText:
+            "Yes, Create Handover",
+
+        cancelButtonText:
+            "Cancel",
+
+        confirmButtonColor:
+            "#2E2278",
+
+        cancelButtonColor:
+            "#999",
+
+        heightAuto: false,
+
+        scrollbarPadding: false
+
+    }).then(function(result) {
+
+        if (!result.isConfirmed) {
+
+            return;
+
+        }
+
+
+        submitWorkHandover({
+
+            building:
+                building,
+
+            originalTechnician:
+                originalTechnician,
+
+            overrideTechnician:
+                overrideTechnician,
+
+            overrideEmail:
+                overrideEmail,
+
+            overrideMobile:
+                overrideMobile,
+
+            startDate:
+                startDate,
+
+            endDate:
+                endDate,
+
+            reason:
+                reason,
+
+            active:
+                "YES"
+
+        });
+
+    });
+
+}
+
+
+/* =========================================================
+   SUBMIT HANDOVER
+========================================================= */
+
+function submitWorkHandover(data) {
+
+    const btn =
+        document.getElementById(
+            "btnCreateHandover"
+        );
+
+
+    btn.disabled = true;
+
+
+    btn.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+
+
+    google.script.run
+
+        .withSuccessHandler(function(result) {
+
+            btn.disabled = false;
+
+
+            btn.innerHTML =
+                '<i class="fa-solid fa-right-left"></i> Create Handover';
+
+
+            if (!result || !result.success) {
+
+                Swal.fire({
+
+                    icon: "error",
+
+                    title: "Handover Not Created",
+
+                    text:
+                        result && result.message
+                        ? result.message
+                        : "Unable to create work handover.",
+
+                    confirmButtonColor:
+                        "#2E2278",
+
+                    heightAuto: false,
+
+                    scrollbarPadding: false
+
+                });
+
+                return;
+
+            }
+
+
+            Swal.fire({
+
+                icon: "success",
+
+                title: "Handover Created",
+
+                text:
+                    "Work handover has been created successfully.",
+
+                confirmButtonColor:
+                    "#2E2278",
+
+                heightAuto: false,
+
+                scrollbarPadding: false
+
+            }).then(function() {
+
+                resetWorkHandoverForm();
+
+                loadWorkHandoverRecords();
+
+            });
+
+        })
+
+        .withFailureHandler(function(error) {
+
+            btn.disabled = false;
+
+
+            btn.innerHTML =
+                '<i class="fa-solid fa-right-left"></i> Create Handover';
+
+
+            console.error(
+                "Create handover error:",
+                error
+            );
+
+
+            Swal.fire({
+
+                icon: "error",
+
+                title: "Handover Failed",
+
+                text:
+                    error.message ||
+                    "Unable to create work handover.",
+
+                confirmButtonColor:
+                    "#2E2278",
+
+                heightAuto: false,
+
+                scrollbarPadding: false
+
+            });
+
+        })
+
+        .createWorkHandover(
+            getWorkHandoverSessionToken(),
+            data
+        );
+
+}
+
+
+/* =========================================================
+   LOAD WORK HANDOVER RECORDS
+========================================================= */
+
+function loadWorkHandoverRecords() {
+
+    const token =
+        getWorkHandoverSessionToken();
+
+
+    if (!token) return;
+
+
+    const tbody =
+        document.getElementById(
+            "workhandoverTableBody"
+        );
+
+
+    if (!tbody) return;
+
+
+    tbody.innerHTML = `
+
+        <tr>
+
+            <td
+                colspan="6"
+                class="workhandover-loading"
+            >
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                <br>
+
+                Loading work handovers...
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    google.script.run
+
+        .withSuccessHandler(function(records) {
+
+            renderWorkHandoverRecords(
+                records || []
+            );
+
+        })
+
+        .withFailureHandler(function(error) {
+
+            console.error(error);
+
+
+            tbody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="workhandover-empty"
+                    >
+
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        <strong>
+                            Unable to Load
+                        </strong>
+
+                        ${error.message || "Something went wrong."}
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        })
+
+        .getWorkHandoverRecords(token);
+
+}
+
+
+/* =========================================================
+   RENDER RECORDS
+========================================================= */
+
+function renderWorkHandoverRecords(records) {
+
+    const tbody =
+        document.getElementById(
+            "workhandoverTableBody"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    if (!records || records.length === 0) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="workhandover-empty"
+                >
+
+                    <i class="fa-solid fa-right-left"></i>
+
+                    <strong>
+                        No Work Handover
+                    </strong>
+
+                    No handover records found.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    records.forEach(function(record) {
+
+        const row =
+            document.createElement("tr");
+
+
+const status =
+    String(record.active || "")
+        .trim()
+        .toUpperCase();
+
+
+let statusHtml = "";
+
+
+if (status === "ACTIVE") {
+
+    statusHtml = `
+        <span class="workhandover-active">
+            <i class="fa-solid fa-circle"></i>
+            ACTIVE
+        </span>
+    `;
+
+}
+else if (status === "UPCOMING") {
+
+    statusHtml = `
+        <span class="workhandover-upcoming">
+            <i class="fa-solid fa-clock"></i>
+            UPCOMING
+        </span>
+    `;
+
+}
+else {
+
+    statusHtml = `
+        <span class="workhandover-expired">
+            EXPIRED
+        </span>
+    `;
+
+}
+
+
+        row.innerHTML = `
+
+            <td>
+                ${record.building || "-"}
+            </td>
+
+            <td>
+
+                <div class="workhandover-tech">
+
+                    <div class="workhandover-tech-avatar">
+
+                        ${
+                            record.originalTechnician
+                            ?
+                            record.originalTechnician
+                                .charAt(0)
+                                .toUpperCase()
+                            :
+                            "?"
+                        }
+
+                    </div>
+
+                    <span>
+                        ${record.originalTechnician || "-"}
+                    </span>
+
+                </div>
+
+            </td>
+
+            <td>
+
+                <div class="workhandover-tech">
+
+                    <div class="workhandover-tech-avatar">
+
+                        ${
+                            record.overrideTechnician
+                            ?
+                            record.overrideTechnician
+                                .charAt(0)
+                                .toUpperCase()
+                            :
+                            "?"
+                        }
+
+                    </div>
+
+                    <span>
+                        ${record.overrideTechnician || "-"}
+                    </span>
+
+                </div>
+
+            </td>
+
+            <td>
+                ${record.startDate || "-"}
+            </td>
+
+            <td>
+                ${record.endDate || "-"}
+            </td>
+
+            <td>
+                ${statusHtml}
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+function showWorkHandoverError(message) {
+
+    Swal.fire({
+
+        icon: "error",
+
+        title: "Work Handover",
+
+        text: message,
+
+        confirmButtonColor:
+            "#2E2278",
+
+        heightAuto: false,
+
+        scrollbarPadding: false
+
+    });
+
+}
+
+
+/* =========================================================
+   INITIAL PAGE LOAD
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        /*
+           Do not automatically load the page here.
+
+           DashboardJS will call:
+
+           initializeWorkHandoverPage()
+
+           when the sidebar button is clicked.
+        */
+
+    }
+);
+
+</script>
