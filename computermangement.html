@@ -1,0 +1,1789 @@
+<style>
+
+/* =====================================================
+   COMPUTER MANAGEMENT - FULLY SCOPED CSS
+===================================================== */
+
+#computerManagementPage,
+#computerManagementPage * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#computerManagementPage {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f9;
+  color: #222;
+  width: 100%;
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+#computerManagementPage .computer-management-container {
+  padding: 20px;
+  width: 100%;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+#computerManagementPage .page-header {
+  margin-bottom: 20px;
+}
+
+#computerManagementPage .page-header h2 {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+#computerManagementPage .page-header p {
+  color: #666;
+  font-size: 14px;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+#computerManagementPage #cmLoadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#computerManagementPage .loading-box {
+  background: white;
+  padding: 25px 35px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+#computerManagementPage .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+#computerManagementPage .stat-card {
+  background: white;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#computerManagementPage .stat-title {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+#computerManagementPage .stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+
+/* =====================================================
+   FILTER SECTION
+===================================================== */
+
+#computerManagementPage .filter-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#computerManagementPage .filter-title {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+#computerManagementPage .filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+  width: 100%;
+  align-items: start;
+}
+@media(max-width: 1100px) {
+
+  #computerManagementPage .filter-grid {
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+  }
+
+}
+
+@media(max-width: 800px) {
+
+  #computerManagementPage .filter-grid {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+
+}
+
+@media(max-width: 600px) {
+
+  #computerManagementPage .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+#computerManagementPage .filter-grid input,
+#computerManagementPage .filter-grid select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+}
+
+#computerManagementPage .filter-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+}
+
+#computerManagementPage button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+#computerManagementPage .btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+#computerManagementPage .btn-primary:hover {
+  background: #1d4ed8;
+}
+
+#computerManagementPage .btn-secondary {
+  background: #e5e7eb;
+  color: #333;
+}
+
+#computerManagementPage .btn-secondary:hover {
+  background: #d1d5db;
+}
+
+#computerManagementPage .btn-view {
+  background: #059669;
+  color: white;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+#computerManagementPage .btn-view:hover {
+  background: #047857;
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+#computerManagementPage .table-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#computerManagementPage .table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#computerManagementPage .table-header h3 {
+  font-size: 18px;
+}
+
+#computerManagementPage #cmComputerCount {
+  color: #666;
+  font-size: 14px;
+}
+
+#computerManagementPage .table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+#computerManagementPage table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+#computerManagementPage th {
+  background: #f3f4f6;
+  padding: 12px;
+  text-align: left;
+  font-size: 13px;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+#computerManagementPage td {
+  padding: 11px;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+#computerManagementPage tr:hover {
+  background: #f9fafb;
+}
+
+#computerManagementPage .empty-message {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+#computerManagementPage .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+#computerManagementPage .summary-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#computerManagementPage .summary-card h3 {
+  margin-bottom: 15px;
+  font-size: 17px;
+}
+
+#computerManagementPage .summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+#computerManagementPage .summary-item:last-child {
+  border-bottom: none;
+}
+
+#computerManagementPage .summary-count {
+  font-weight: bold;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+#computerManagementPage #cmComputerModal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  overflow-y: auto;
+  padding: 30px 15px;
+}
+
+#computerManagementPage .modal-content {
+  background: white;
+  max-width: 900px;
+  margin: auto;
+  border-radius: 12px;
+  padding: 25px;
+  position: relative;
+}
+
+#computerManagementPage .modal-close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #666;
+}
+
+#computerManagementPage .modal-close:hover {
+  color: red;
+}
+
+#computerManagementPage .modal-title {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+#computerManagementPage .details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+#computerManagementPage .detail-item {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 7px;
+}
+
+#computerManagementPage .detail-label {
+  font-size: 11px;
+  color: #777;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+#computerManagementPage .detail-value {
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+#computerManagementPage #cmErrorBox {
+  display: none;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width: 600px) {
+
+  #computerManagementPage .computer-management-container {
+    padding: 12px;
+  }
+
+  #computerManagementPage .page-header h2 {
+    font-size: 21px;
+  }
+
+}
+
+</style>
+
+
+<div id="computerManagementPage">
+
+  <!-- LOADING -->
+
+  <div id="cmLoadingOverlay">
+    <div class="loading-box">
+      Loading Computer Data...
+    </div>
+  </div>
+
+
+  <div class="computer-management-container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+      <h2>Computer Management</h2>
+
+      <p>
+        Manage and monitor all computer assets
+      </p>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div id="cmErrorBox"></div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-title">Total Computers</div>
+        <div class="stat-value" id="cmTotalComputers">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Buildings</div>
+        <div class="stat-value" id="cmTotalBuildings">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Labs / Rooms</div>
+        <div class="stat-value" id="cmTotalLabsRooms">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Assigned Users</div>
+        <div class="stat-value" id="cmAssignedUsers">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Printers</div>
+        <div class="stat-value" id="cmTotalPrinters">0</div>
+      </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filter-card">
+
+      <div class="filter-title">
+        Search & Filter
+      </div>
+
+
+      <div class="filter-grid">
+
+        <input
+          type="text"
+          id="cmSearchInput"
+          placeholder="Search Computer, MAC, User..."
+        >
+
+        <select id="cmBuildingFilter">
+          <option value="">All Buildings</option>
+        </select>
+
+        <select id="cmLabRoomFilter">
+          <option value="">All Labs / Rooms</option>
+        </select>
+
+        <select id="cmFloorFilter">
+          <option value="">All Floors</option>
+        </select>
+
+        <select id="cmAssetTypeFilter">
+          <option value="">All Asset Types</option>
+        </select>
+
+        <select id="cmOsFilter">
+          <option value="">All Operating Systems</option>
+        </select>
+
+        <select id="cmCpuBrandFilter">
+          <option value="">All CPU Brands</option>
+        </select>
+
+        <select id="cmProcessorFilter">
+          <option value="">All Processors</option>
+        </select>
+
+        <select id="cmRamFilter">
+          <option value="">All RAM</option>
+        </select>
+
+        <select id="cmStorageFilter">
+          <option value="">All Primary Storage</option>
+        </select>
+
+        <select id="cmGraphicCardFilter">
+          <option value="">All Graphic Cards</option>
+        </select>
+
+        <select id="cmUserFilter">
+          <option value="">All Users</option>
+        </select>
+
+      </div>
+
+
+      <div class="filter-buttons">
+
+        <button
+          class="btn-primary"
+          onclick="cmApplyFilters()"
+        >
+          Apply Filters
+        </button>
+
+        <button
+          class="btn-secondary"
+          onclick="cmResetFilters()"
+        >
+          Reset
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- COMPUTER TABLE -->
+
+    <div class="table-card">
+
+      <div class="table-header">
+
+        <h3>Computer List</h3>
+
+        <div id="cmComputerCount">
+          0 Computers
+        </div>
+
+      </div>
+
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Sl No</th>
+              <th>Building</th>
+              <th>Lab / Room</th>
+              <th>Computer No</th>
+              <th>Processor</th>
+              <th>RAM</th>
+              <th>Storage</th>
+              <th>OS</th>
+              <th>User</th>
+              <th>Action</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody id="cmComputerTableBody">
+
+            <tr>
+              <td colspan="10" class="empty-message">
+                Loading...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <h3>Building Distribution</h3>
+        <div id="cmBuildingSummary">Loading...</div>
+      </div>
+
+      <div class="summary-card">
+        <h3>Operating Systems</h3>
+        <div id="cmOsSummary">Loading...</div>
+      </div>
+
+      <div class="summary-card">
+        <h3>RAM Distribution</h3>
+        <div id="cmRamSummary">Loading...</div>
+      </div>
+
+      <div class="summary-card">
+        <h3>Storage Distribution</h3>
+        <div id="cmStorageSummary">Loading...</div>
+      </div>
+
+      <div class="summary-card">
+        <h3>Graphic Card Distribution</h3>
+        <div id="cmGraphicCardSummary">Loading...</div>
+      </div>
+
+    </div>
+
+
+    <!-- COMPUTER DETAILS MODAL -->
+
+    <div id="cmComputerModal">
+
+      <div class="modal-content">
+
+        <span
+          class="modal-close"
+          onclick="cmCloseComputerModal()"
+        >
+          &times;
+        </span>
+
+
+        <h2
+          class="modal-title"
+          id="cmModalComputerTitle"
+        >
+          Computer Details
+        </h2>
+
+
+        <div
+          id="cmComputerDetailsContent"
+          class="details-grid"
+        >
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   COMPUTER MANAGEMENT - JAVASCRIPT
+===================================================== */
+
+let CM_SESSION_TOKEN = "";
+let cmCurrentComputers = [];
+
+
+/* =====================================================
+   SESSION TOKEN
+===================================================== */
+
+function cmGetSessionTokenFromBrowser() {
+
+  const possibleKeys = [
+    "sessionToken",
+    "SESSION_TOKEN",
+    "token",
+    "userSessionToken"
+  ];
+
+
+  for (let i = 0; i < possibleKeys.length; i++) {
+
+    const key = possibleKeys[i];
+
+    let token = sessionStorage.getItem(key);
+
+    if (!token) {
+      token = localStorage.getItem(key);
+    }
+
+    if (token) {
+      return token;
+    }
+
+  }
+
+  return "";
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+function cmInitializeComputerManagement() {
+
+  CM_SESSION_TOKEN =
+    cmGetSessionTokenFromBrowser();
+
+
+  if (!CM_SESSION_TOKEN) {
+
+    cmShowError(
+      "Session token not found. Please login again."
+    );
+
+    return;
+  }
+
+
+  cmLoadComputerManagement();
+
+}
+
+
+/* =====================================================
+   LOAD EVERYTHING
+===================================================== */
+
+function cmLoadComputerManagement() {
+
+  cmShowLoading();
+
+
+  Promise.all([
+
+    cmCallAppsScript(
+      "getComputerFilters",
+      [CM_SESSION_TOKEN]
+    ),
+
+    cmCallAppsScript(
+      "getComputerList",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getComputerStats",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getComputerBuildingChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getOSDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getRAMDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getStorageDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getGraphicCardDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    )
+
+  ])
+
+  .then(function(results) {
+
+    const filters = results[0];
+    const computers = results[1];
+    const stats = results[2];
+
+    cmCurrentComputers = computers || [];
+
+
+    cmPopulateFilters(filters || {});
+    cmUpdateStatistics(stats || {});
+    cmRenderComputerTable(cmCurrentComputers);
+
+
+    cmRenderSummary(
+      "cmBuildingSummary",
+      results[3],
+      "building"
+    );
+
+    cmRenderSummary(
+      "cmOsSummary",
+      results[4],
+      "os"
+    );
+
+    cmRenderSummary(
+      "cmRamSummary",
+      results[5],
+      "ram"
+    );
+
+    cmRenderSummary(
+      "cmStorageSummary",
+      results[6],
+      "storage"
+    );
+
+    cmRenderSummary(
+      "cmGraphicCardSummary",
+      results[7],
+      "graphicCard"
+    );
+
+
+    cmHideLoading();
+
+  })
+
+  .catch(function(error) {
+
+    cmHideLoading();
+
+    cmShowError(
+      error.message || error
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   APPS SCRIPT WRAPPER
+===================================================== */
+
+function cmCallAppsScript(
+  functionName,
+  args
+) {
+
+  return new Promise(
+    function(resolve, reject) {
+
+      const runner =
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(reject);
+
+
+      runner[functionName](...args);
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   POPULATE FILTERS
+===================================================== */
+
+function cmPopulateFilters(filters) {
+
+  cmPopulateSelect(
+    "cmBuildingFilter",
+    filters.buildings
+  );
+
+  cmPopulateSelect(
+    "cmLabRoomFilter",
+    filters.labRooms
+  );
+
+  cmPopulateSelect(
+    "cmFloorFilter",
+    filters.floors
+  );
+
+  cmPopulateSelect(
+    "cmAssetTypeFilter",
+    filters.assetTypes
+  );
+
+  cmPopulateSelect(
+    "cmOsFilter",
+    filters.operatingSystems
+  );
+
+  cmPopulateSelect(
+    "cmCpuBrandFilter",
+    filters.cpuBrands
+  );
+
+  cmPopulateSelect(
+    "cmProcessorFilter",
+    filters.processors
+  );
+
+  cmPopulateSelect(
+    "cmRamFilter",
+    filters.ramOptions
+  );
+
+  cmPopulateSelect(
+    "cmStorageFilter",
+    filters.primaryStorageOptions
+  );
+
+  cmPopulateSelect(
+    "cmGraphicCardFilter",
+    filters.graphicCards
+  );
+
+  cmPopulateSelect(
+    "cmUserFilter",
+    filters.users
+  );
+
+}
+
+
+function cmPopulateSelect(id, values) {
+
+  const select =
+    document.getElementById(id);
+
+  if (!select) {
+    return;
+  }
+
+  values = values || [];
+
+
+  values.forEach(function(value) {
+
+    const option =
+      document.createElement("option");
+
+    option.value = value;
+    option.textContent = value;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+/* =====================================================
+   GET FILTER
+===================================================== */
+
+function cmGetCurrentFilter() {
+
+  return {
+
+    search:
+      document
+        .getElementById("cmSearchInput")
+        .value
+        .trim(),
+
+    building:
+      document
+        .getElementById("cmBuildingFilter")
+        .value,
+
+    labRoom:
+      document
+        .getElementById("cmLabRoomFilter")
+        .value,
+
+    floor:
+      document
+        .getElementById("cmFloorFilter")
+        .value,
+
+    assetType:
+      document
+        .getElementById("cmAssetTypeFilter")
+        .value,
+
+    os:
+      document
+        .getElementById("cmOsFilter")
+        .value,
+
+    cpuBrand:
+      document
+        .getElementById("cmCpuBrandFilter")
+        .value,
+
+    processor:
+      document
+        .getElementById("cmProcessorFilter")
+        .value,
+
+    ram:
+      document
+        .getElementById("cmRamFilter")
+        .value,
+
+    primaryStorage:
+      document
+        .getElementById("cmStorageFilter")
+        .value,
+
+    graphicCard:
+      document
+        .getElementById("cmGraphicCardFilter")
+        .value,
+
+    userName:
+      document
+        .getElementById("cmUserFilter")
+        .value
+
+  };
+
+}
+
+
+/* =====================================================
+   APPLY FILTERS
+===================================================== */
+
+function cmApplyFilters() {
+
+  const filter =
+    cmGetCurrentFilter();
+
+
+  cmShowLoading();
+
+
+  Promise.all([
+
+    cmCallAppsScript(
+      "getComputerList",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getComputerStats",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getComputerBuildingChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getOSDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getRAMDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getStorageDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getGraphicCardDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    )
+
+  ])
+
+  .then(function(results) {
+
+    cmCurrentComputers =
+      results[0] || [];
+
+
+    cmRenderComputerTable(
+      cmCurrentComputers
+    );
+
+    cmUpdateStatistics(
+      results[1] || {}
+    );
+
+    cmRenderSummary(
+      "cmBuildingSummary",
+      results[2],
+      "building"
+    );
+
+    cmRenderSummary(
+      "cmOsSummary",
+      results[3],
+      "os"
+    );
+
+    cmRenderSummary(
+      "cmRamSummary",
+      results[4],
+      "ram"
+    );
+
+    cmRenderSummary(
+      "cmStorageSummary",
+      results[5],
+      "storage"
+    );
+
+    cmRenderSummary(
+      "cmGraphicCardSummary",
+      results[6],
+      "graphicCard"
+    );
+
+
+    cmHideLoading();
+
+  })
+
+  .catch(function(error) {
+
+    cmHideLoading();
+
+    cmShowError(
+      error.message || error
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   RESET FILTERS
+===================================================== */
+
+function cmResetFilters() {
+
+  document
+    .getElementById("cmSearchInput")
+    .value = "";
+
+
+  const filterIds = [
+
+    "cmBuildingFilter",
+    "cmLabRoomFilter",
+    "cmFloorFilter",
+    "cmAssetTypeFilter",
+    "cmOsFilter",
+    "cmCpuBrandFilter",
+    "cmProcessorFilter",
+    "cmRamFilter",
+    "cmStorageFilter",
+    "cmGraphicCardFilter",
+    "cmUserFilter"
+
+  ];
+
+
+  filterIds.forEach(
+    function(id) {
+
+      document
+        .getElementById(id)
+        .value = "";
+
+    }
+  );
+
+
+  cmApplyFilters();
+
+}
+
+
+/* =====================================================
+   UPDATE STATISTICS
+===================================================== */
+
+function cmUpdateStatistics(stats) {
+
+  document.getElementById(
+    "cmTotalComputers"
+  ).textContent =
+    stats.totalComputers || 0;
+
+
+  document.getElementById(
+    "cmTotalBuildings"
+  ).textContent =
+    stats.totalBuildings || 0;
+
+
+  document.getElementById(
+    "cmTotalLabsRooms"
+  ).textContent =
+    stats.totalLabsRooms || 0;
+
+
+  document.getElementById(
+    "cmAssignedUsers"
+  ).textContent =
+    stats.assignedUsers || 0;
+
+
+  document.getElementById(
+    "cmTotalPrinters"
+  ).textContent =
+    stats.printers || 0;
+
+}
+
+
+/* =====================================================
+   RENDER COMPUTER TABLE
+===================================================== */
+
+function cmRenderComputerTable(computers) {
+
+  computers = computers || [];
+
+
+  const tableBody =
+    document.getElementById(
+      "cmComputerTableBody"
+    );
+
+
+  document.getElementById(
+    "cmComputerCount"
+  ).textContent =
+    computers.length + " Computers";
+
+
+  tableBody.innerHTML = "";
+
+
+  if (computers.length === 0) {
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="10" class="empty-message">
+          No computers found
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+
+  computers.forEach(
+    function(computer) {
+
+      const row =
+        document.createElement("tr");
+
+
+      row.innerHTML = `
+
+        <td>${cmEscapeHtml(computer.slNo)}</td>
+
+        <td>${cmEscapeHtml(computer.buildingName)}</td>
+
+        <td>${cmEscapeHtml(computer.labRoomName)}</td>
+
+        <td>${cmEscapeHtml(computer.computerNo)}</td>
+
+        <td>${cmEscapeHtml(computer.processor)}</td>
+
+        <td>${cmEscapeHtml(computer.ram)}</td>
+
+        <td>${cmEscapeHtml(computer.primaryStorage)}</td>
+
+        <td>${cmEscapeHtml(computer.os)}</td>
+
+        <td>${cmEscapeHtml(computer.userName)}</td>
+
+        <td>
+
+          <button
+            class="btn-view"
+            onclick="cmViewComputer('${cmEscapeAttribute(computer.computerNo)}')"
+          >
+            View
+          </button>
+
+        </td>
+
+      `;
+
+
+      tableBody.appendChild(row);
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   VIEW COMPUTER
+===================================================== */
+
+function cmViewComputer(computerNo) {
+
+  cmShowLoading();
+
+
+  cmCallAppsScript(
+    "getComputerDetails",
+    [
+      CM_SESSION_TOKEN,
+      computerNo
+    ]
+  )
+
+  .then(function(computer) {
+
+    cmHideLoading();
+
+
+    if (!computer) {
+
+      cmShowError(
+        "Computer details not found."
+      );
+
+      return;
+
+    }
+
+
+    document.getElementById(
+      "cmModalComputerTitle"
+    ).textContent =
+      "Computer: " +
+      computer.computerNo;
+
+
+    const details = [
+
+      ["Sl No", computer.slNo],
+      ["Building", computer.buildingName],
+      ["Lab / Room", computer.labRoomName],
+      ["Computer No", computer.computerNo],
+      ["CPU Brand", computer.cpuBrand],
+      ["Monitor Brand", computer.monitorBrand],
+      ["Keyboard Brand", computer.keyboardBrand],
+      ["Mouse Brand", computer.mouseBrand],
+      ["Motherboard", computer.motherboard],
+      ["Processor", computer.processor],
+      ["Primary Storage", computer.primaryStorage],
+      ["RAM", computer.ram],
+      ["Graphic Card", computer.graphicCard],
+      ["MAC Address", computer.macAddress],
+      ["Operating System", computer.os],
+      ["Level", computer.level],
+      ["Floor", computer.floor],
+      ["Asset Type", computer.assetType],
+      ["User Name", computer.userName],
+      ["Technician Email", computer.technicianEmail],
+      ["Secondary Storage", computer.secondaryStorage],
+      ["External Storage", computer.externalStorage],
+      ["Printer Brand", computer.printerBrand],
+      ["Printer Model", computer.printerModel],
+      ["Printer Type", computer.printerType],
+      ["QR Code", computer.qrCode],
+      ["Direct Link", computer.directLink],
+      ["QR Code Link", computer.qrCodeLink],
+      ["Timestamp", computer.timestamp]
+
+    ];
+
+
+    const container =
+      document.getElementById(
+        "cmComputerDetailsContent"
+      );
+
+
+    container.innerHTML = "";
+
+
+    details.forEach(
+      function(item) {
+
+        const detail =
+          document.createElement("div");
+
+
+        detail.className =
+          "detail-item";
+
+
+        detail.innerHTML = `
+
+          <div class="detail-label">
+            ${cmEscapeHtml(item[0])}
+          </div>
+
+          <div class="detail-value">
+            ${cmFormatDetailValue(item[1])}
+          </div>
+
+        `;
+
+
+        container.appendChild(detail);
+
+      }
+    );
+
+
+    document.getElementById(
+      "cmComputerModal"
+    ).style.display =
+      "block";
+
+  })
+
+  .catch(function(error) {
+
+    cmHideLoading();
+
+    cmShowError(
+      error.message || error
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   FORMAT DETAIL VALUE
+===================================================== */
+
+function cmFormatDetailValue(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return "-";
+
+  }
+
+
+  const text =
+    String(value);
+
+
+  if (
+    text.startsWith("http://") ||
+    text.startsWith("https://")
+  ) {
+
+    return `
+      <a
+        href="${cmEscapeAttribute(text)}"
+        target="_blank"
+      >
+        Open Link
+      </a>
+    `;
+
+  }
+
+
+  return cmEscapeHtml(text);
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function cmCloseComputerModal() {
+
+  document.getElementById(
+    "cmComputerModal"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   RENDER SUMMARY
+===================================================== */
+
+function cmRenderSummary(
+  containerId,
+  data,
+  labelKey
+) {
+
+  const container =
+    document.getElementById(
+      containerId
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML =
+      "<div class='empty-message'>No data available</div>";
+
+    return;
+
+  }
+
+
+  data.forEach(
+    function(item) {
+
+      const div =
+        document.createElement("div");
+
+
+      div.className =
+        "summary-item";
+
+
+      div.innerHTML = `
+
+        <span>
+          ${cmEscapeHtml(
+            item[labelKey] || "Unknown"
+          )}
+        </span>
+
+        <span class="summary-count">
+          ${item.count}
+        </span>
+
+      `;
+
+
+      container.appendChild(div);
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+function cmShowLoading() {
+
+  document.getElementById(
+    "cmLoadingOverlay"
+  ).style.display =
+    "flex";
+
+}
+
+
+function cmHideLoading() {
+
+  document.getElementById(
+    "cmLoadingOverlay"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+function cmShowError(message) {
+
+  const errorBox =
+    document.getElementById(
+      "cmErrorBox"
+    );
+
+
+  errorBox.textContent =
+    message;
+
+
+  errorBox.style.display =
+    "block";
+
+
+  console.error(message);
+
+
+  setTimeout(
+    function() {
+
+      errorBox.style.display =
+        "none";
+
+    },
+    7000
+  );
+
+}
+
+
+/* =====================================================
+   SECURITY HELPERS
+===================================================== */
+
+function cmEscapeHtml(value) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return "";
+
+  }
+
+
+  const div =
+    document.createElement("div");
+
+
+  div.textContent =
+    String(value);
+
+
+  return div.innerHTML;
+
+}
+
+
+function cmEscapeAttribute(value) {
+
+  return cmEscapeHtml(value)
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+(function cmSetupComputerManagement() {
+
+  const page =
+    document.getElementById(
+      "computerManagementPage"
+    );
+
+
+  if (!page) {
+    return;
+  }
+
+
+  const searchInput =
+    document.getElementById(
+      "cmSearchInput"
+    );
+
+
+  if (searchInput) {
+
+    searchInput.addEventListener(
+      "keypress",
+      function(event) {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          cmApplyFilters();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  const modal =
+    document.getElementById(
+      "cmComputerModal"
+    );
+
+
+  if (modal) {
+
+    modal.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target === modal
+        ) {
+
+          cmCloseComputerModal();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  cmInitializeComputerManagement();
+
+})();
+
+</script>
