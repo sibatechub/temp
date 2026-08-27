@@ -1,0 +1,1049 @@
+<style>
+
+/* =====================================================
+   COMPUTER MANAGEMENT - FULLY SCOPED CSS
+===================================================== */
+
+#computerManagementPage,
+#computerManagementPage * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#computerManagementPage {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f9;
+  color: #222;
+  width: 100%;
+  min-height: 100%;
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+#computerManagementPage .computer-management-container {
+  padding: 20px;
+  width: 100%;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+#computerManagementPage .page-header {
+  margin-bottom: 20px;
+}
+
+#computerManagementPage .page-header h2 {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+#computerManagementPage .page-header p {
+  color: #666;
+  font-size: 14px;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+#computerManagementPage #cmLoadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#computerManagementPage .loading-box {
+  background: white;
+  padding: 25px 35px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+/* =========================================
+   COLORFUL STATISTICS
+========================================= */
+
+#computerManagementPage .stats-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(180px, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 22px;
+
+}
+
+
+#computerManagementPage .stat-card {
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 14px;
+
+  padding: 20px;
+
+  min-height: 115px;
+
+  background: white;
+
+  border:
+    1px solid rgba(0,0,0,0.04);
+
+  box-shadow:
+    0 6px 20px rgba(30,41,59,0.08);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+}
+
+
+#computerManagementPage .stat-card:hover {
+
+  transform:
+    translateY(-4px);
+
+  box-shadow:
+    0 12px 28px rgba(30,41,59,0.14);
+
+}
+
+
+#computerManagementPage .stat-card:nth-child(1) {
+
+  border-left:
+    5px solid #2563eb;
+
+}
+
+
+#computerManagementPage .stat-card:nth-child(2) {
+
+  border-left:
+    5px solid #f59e0b;
+
+}
+
+
+#computerManagementPage .stat-card:nth-child(3) {
+
+  border-left:
+    5px solid #8b5cf6;
+
+}
+
+
+#computerManagementPage .stat-card:nth-child(4) {
+
+  border-left:
+    5px solid #10b981;
+
+}
+
+
+#computerManagementPage .stat-card:nth-child(5) {
+
+  border-left:
+    5px solid #ef4444;
+
+}
+
+
+#computerManagementPage .stat-title {
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  margin-bottom: 12px;
+
+}
+
+
+#computerManagementPage .stat-value {
+
+  font-size: 32px;
+
+  font-weight: 700;
+
+  color: #1e293b;
+
+}
+
+
+/* =====================================================
+   SUMMARY / DISTRIBUTION
+===================================================== */
+
+#computerManagementPage .summary-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+
+}
+
+
+#computerManagementPage .summary-card {
+
+  background: white;
+
+  border-radius: 10px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+
+  min-height: 140px;
+
+}
+
+
+#computerManagementPage .summary-card h3 {
+
+  margin-bottom: 15px;
+
+  font-size: 17px;
+
+}
+
+
+#computerManagementPage .summary-item {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 9px 0;
+
+  border-bottom:
+    1px solid #eee;
+
+  font-size: 13px;
+
+}
+
+
+#computerManagementPage .summary-item:last-child {
+
+  border-bottom: none;
+
+}
+
+
+#computerManagementPage .summary-count {
+
+  font-weight: bold;
+
+}
+/* =====================================================
+   ANALYTICS DASHBOARD
+===================================================== */
+
+#computerManagementPage .analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+
+#computerManagementPage .analytics-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 5px 18px rgba(30, 41, 59, 0.07);
+  min-width: 0;
+  overflow: hidden;
+}
+
+
+#computerManagementPage .analytics-card-wide {
+  grid-column: span 2;
+}
+
+
+#computerManagementPage .analytics-header {
+  margin-bottom: 12px;
+}
+
+
+#computerManagementPage .analytics-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 5px;
+}
+
+
+#computerManagementPage .analytics-header p {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+
+/* =====================================================
+   NORMAL CHART CONTAINER
+===================================================== */
+
+#computerManagementPage .chart-container {
+  position: relative;
+  width: 100%;
+  height: 260px;
+}
+
+
+#computerManagementPage .chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+/* =====================================================
+   BUILDING CHART
+===================================================== */
+
+#computerManagementPage .building-chart-container {
+  position: relative;
+  width: 100%;
+  height: 260px;
+}
+
+
+#computerManagementPage .building-chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1500px) {
+
+  #computerManagementPage .analytics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  #computerManagementPage .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #computerManagementPage .analytics-card-wide {
+    grid-column: span 1;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  #computerManagementPage .analytics-card {
+    padding: 14px;
+  }
+
+  #computerManagementPage .chart-container,
+  #computerManagementPage .building-chart-container {
+    height: 230px;
+  }
+
+}
+
+/* =====================================================
+   FILTER SECTION
+===================================================== */
+
+#computerManagementPage .filter-card {
+
+  background: white;
+
+  padding: 20px;
+
+  border-radius: 10px;
+
+  margin-bottom: 20px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+
+}
+
+
+#computerManagementPage .filter-title {
+
+  font-size: 17px;
+
+  font-weight: bold;
+
+  margin-bottom: 15px;
+
+}
+
+
+#computerManagementPage .filter-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(180px, 1fr));
+
+  gap: 12px;
+
+  width: 100%;
+
+  align-items: start;
+
+}
+
+
+@media(max-width: 1100px) {
+
+  #computerManagementPage .stats-grid {
+
+    grid-template-columns:
+      repeat(3, minmax(180px, 1fr));
+
+  }
+
+
+  #computerManagementPage .filter-grid {
+
+    grid-template-columns:
+      repeat(3, minmax(180px, 1fr));
+
+  }
+
+}
+
+
+@media(max-width: 800px) {
+
+  #computerManagementPage .stats-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(180px, 1fr));
+
+  }
+
+
+  #computerManagementPage .filter-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(180px, 1fr));
+
+  }
+
+}
+
+
+@media(max-width: 600px) {
+
+  #computerManagementPage .stats-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  #computerManagementPage .filter-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  #computerManagementPage .summary-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+
+#computerManagementPage .filter-grid input,
+#computerManagementPage .filter-grid select {
+
+  width: 100%;
+
+  padding: 10px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius: 6px;
+
+  font-size: 14px;
+
+  background: white;
+
+}
+
+
+#computerManagementPage .filter-buttons {
+
+  margin-top: 20px;
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  width: 100%;
+
+}
+
+
+#computerManagementPage button {
+
+  border: none;
+
+  border-radius: 6px;
+
+  padding: 10px 16px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  transition: 0.2s;
+
+}
+
+
+#computerManagementPage .btn-primary {
+
+  background: #2563eb;
+
+  color: white;
+
+}
+
+
+#computerManagementPage .btn-primary:hover {
+
+  background: #1d4ed8;
+
+}
+
+
+#computerManagementPage .btn-secondary {
+
+  background: #e5e7eb;
+
+  color: #333;
+
+}
+
+
+#computerManagementPage .btn-secondary:hover {
+
+  background: #d1d5db;
+
+}
+
+
+#computerManagementPage .btn-view {
+
+  background: #059669;
+
+  color: white;
+
+  padding: 7px 12px;
+
+  font-size: 12px;
+
+}
+
+
+#computerManagementPage .btn-view:hover {
+
+  background: #047857;
+
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+#computerManagementPage .table-card {
+
+  background: white;
+
+  border-radius: 10px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+
+}
+
+
+#computerManagementPage .table-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 15px;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+}
+
+
+#computerManagementPage .table-header h3 {
+
+  font-size: 18px;
+
+}
+
+
+#computerManagementPage #cmComputerCount {
+
+  color: #666;
+
+  font-size: 14px;
+
+}
+
+
+#computerManagementPage .table-wrapper {
+
+  overflow-x: auto;
+
+  width: 100%;
+
+}
+
+
+#computerManagementPage table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 1000px;
+
+}
+
+
+#computerManagementPage th {
+
+  background: #f3f4f6;
+
+  padding: 12px;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  border-bottom:
+    1px solid #ddd;
+
+  white-space: nowrap;
+
+}
+
+
+#computerManagementPage td {
+
+  padding: 11px;
+
+  border-bottom:
+    1px solid #eee;
+
+  font-size: 13px;
+
+}
+
+
+#computerManagementPage tr:hover {
+
+  background: #f9fafb;
+
+}
+
+
+#computerManagementPage .empty-message {
+
+  text-align: center;
+
+  padding: 30px;
+
+  color: #777;
+
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+#computerManagementPage #cmComputerModal {
+
+  display: none;
+
+  position: fixed;
+
+  z-index: 10000;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,0.55);
+
+  overflow-y: auto;
+
+  padding: 30px 15px;
+
+}
+
+
+#computerManagementPage .modal-content {
+
+  background: white;
+
+  max-width: 900px;
+
+  margin: auto;
+
+  border-radius: 12px;
+
+  padding: 25px;
+
+  position: relative;
+
+}
+
+
+#computerManagementPage .modal-close {
+
+  position: absolute;
+
+  right: 20px;
+
+  top: 15px;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+  color: #666;
+
+}
+
+
+#computerManagementPage .modal-close:hover {
+
+  color: red;
+
+}
+
+
+#computerManagementPage .modal-title {
+
+  margin-bottom: 20px;
+
+  padding-bottom: 12px;
+
+  border-bottom:
+    1px solid #eee;
+
+}
+
+
+#computerManagementPage .details-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+
+  gap: 15px;
+
+}
+
+
+#computerManagementPage .detail-item {
+
+  background: #f8fafc;
+
+  padding: 12px;
+
+  border-radius: 7px;
+
+}
+
+
+#computerManagementPage .detail-label {
+
+  font-size: 11px;
+
+  color: #777;
+
+  text-transform: uppercase;
+
+  margin-bottom: 5px;
+
+}
+
+
+#computerManagementPage .detail-value {
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  word-break: break-word;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+#computerManagementPage #cmErrorBox {
+
+  display: none;
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+  padding: 15px;
+
+  border-radius: 8px;
+
+  margin-bottom: 15px;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width: 600px) {
+
+  #computerManagementPage .computer-management-container {
+
+    padding: 12px;
+
+  }
+
+
+  #computerManagementPage .page-header h2 {
+
+    font-size: 21px;
+
+  }
+
+}
+/* =====================================================
+   COMPUTER WORKSPACE
+===================================================== */
+
+#computerManagementPage .cm-main-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+
+#computerManagementPage .cm-main-workspace.panel-open {
+  grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+
+/* =====================================================
+   DETAILS PANEL
+===================================================== */
+
+#computerManagementPage .cm-details-panel {
+
+  display: none;
+
+  background: white;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+
+  min-height: 500px;
+
+  max-height:
+    calc(100vh - 40px);
+
+  position: sticky;
+
+  top: 20px;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+}
+
+
+#computerManagementPage .cm-details-panel-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 18px;
+
+  border-bottom:
+    1px solid #e5e7eb;
+
+}
+
+
+#computerManagementPage .cm-details-panel-header h3 {
+
+  font-size: 17px;
+
+}
+
+
+#computerManagementPage .cm-details-panel-header button {
+
+  background: transparent;
+
+  color: #555;
+
+  font-size: 24px;
+
+  padding: 0;
+
+}
+
+
+#computerManagementPage #cmDetailsPanelContent {
+
+  padding: 15px;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 1200px) {
+
+  #computerManagementPage .cm-main-workspace,
+  #computerManagementPage .cm-main-workspace.panel-open {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  #computerManagementPage .cm-details-panel {
+
+    position: relative;
+
+    top: auto;
+
+    max-height: none;
+
+  }
+
+}
+
+/* =====================================================
+   RESPONSIVE ANALYTICS
+===================================================== */
+
+@media (max-width: 1400px) {
+
+  #computerManagementPage .analytics-grid {
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  #computerManagementPage .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  #computerManagementPage .analytics-card-wide {
+    grid-column: span 1;
+  }
+
+}
+#computerManagementPage #cmComputerTableBody tr {
+  cursor: pointer;
+}
+
+#computerManagementPage #cmComputerTableBody tr:hover {
+  background: #eef4ff;
+}
+/* =========================================
+   SELECTED COMPUTER ROW
+========================================= */
+
+#computerManagementPage #cmComputerTableBody tr.cm-selected-row {
+  background: #dbeafe !important;
+  box-shadow: inset 4px 0 0 #2563eb;
+}
+
+#computerManagementPage #cmComputerTableBody tr.cm-selected-row td {
+  font-weight: 600;
+}
+
+
+</style>
