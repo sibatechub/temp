@@ -1,0 +1,1952 @@
+<script>
+
+/* =====================================================
+   COMPUTER MANAGEMENT - JAVASCRIPT
+===================================================== */
+
+let CM_SESSION_TOKEN = "";
+let cmCurrentComputers = [];
+let cmBuildingChart = null;
+
+let cmOsChart = null;
+
+let cmRamChart = null;
+
+let cmStorageChart = null;
+
+let cmGraphicCardChart = null;
+
+
+/* =====================================================
+   SESSION TOKEN
+===================================================== */
+
+function cmGetSessionTokenFromBrowser() {
+
+  const possibleKeys = [
+    "sessionToken",
+    "SESSION_TOKEN",
+    "token",
+    "userSessionToken"
+  ];
+
+  for (let i = 0; i < possibleKeys.length; i++) {
+
+    const key = possibleKeys[i];
+
+    let token = sessionStorage.getItem(key);
+
+    if (!token) {
+      token = localStorage.getItem(key);
+    }
+
+    if (token) {
+      return token;
+    }
+
+  }
+
+  return "";
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+function cmInitializeComputerManagement() {
+
+  CM_SESSION_TOKEN =
+    cmGetSessionTokenFromBrowser();
+
+  if (!CM_SESSION_TOKEN) {
+
+    cmShowError(
+      "Session token not found. Please login again."
+    );
+
+    return;
+  }
+
+  cmLoadComputerManagement();
+
+}
+
+
+/* =====================================================
+   LOAD EVERYTHING
+===================================================== */
+
+function cmLoadComputerManagement() {
+
+  cmShowLoading();
+
+  Promise.all([
+
+    cmCallAppsScript(
+      "getComputerFilters",
+      [CM_SESSION_TOKEN]
+    ),
+
+    cmCallAppsScript(
+      "getComputerList",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getComputerStats",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getComputerBuildingChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getOSDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getRAMDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getStorageDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    ),
+
+    cmCallAppsScript(
+      "getGraphicCardDistributionChart",
+      [CM_SESSION_TOKEN, {}]
+    )
+
+  ])
+
+  .then(function(results) {
+
+    console.log(
+      "===== COMPUTER MANAGEMENT RESULTS ====="
+    );
+
+    console.log(
+      "Filters:",
+      results[0]
+    );
+
+    console.log(
+      "Computer List Result:",
+      results[1]
+    );
+
+    console.log(
+      "Is Array:",
+      Array.isArray(results[1])
+    );
+
+    console.log(
+      "Computer List Length:",
+      results[1]
+        ? results[1].length
+        : "NULL"
+    );
+
+    console.log(
+      "Statistics:",
+      results[2]
+    );
+
+
+    const filters =
+      results[0];
+
+    const computers =
+      results[1];
+
+    const stats =
+      results[2];
+
+
+    cmCurrentComputers =
+      Array.isArray(computers)
+        ? computers
+        : [];
+
+
+    console.log(
+      "cmCurrentComputers Length:",
+      cmCurrentComputers.length
+    );
+
+
+    /* Populate Filters */
+
+    cmPopulateFilters(
+      filters || {}
+    );
+
+
+    /* Update Statistics */
+
+    cmUpdateStatistics(
+      stats || {}
+    );
+
+
+    /* Render Computer Table */
+
+    cmRenderComputerTable(
+      cmCurrentComputers
+    );
+
+
+cmRenderAnalyticsCharts(
+
+  results[3],
+
+  results[4],
+
+  results[5],
+
+  results[6],
+
+  results[7]
+
+);
+
+
+    cmHideLoading();
+
+  })
+
+  .catch(function(error) {
+
+    cmHideLoading();
+
+    console.error(
+      "Computer Management Error:",
+      error
+    );
+
+    cmShowError(
+      error.message || error
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   APPS SCRIPT WRAPPER
+===================================================== */
+
+function cmCallAppsScript(functionName, args) {
+
+  return new Promise(
+    function(resolve, reject) {
+
+      const runner =
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(reject);
+
+      runner[functionName](...args);
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   POPULATE FILTERS
+===================================================== */
+
+function cmPopulateFilters(filters) {
+
+  cmPopulateSelect(
+    "cmBuildingFilter",
+    filters.buildings
+  );
+
+  cmPopulateSelect(
+    "cmLabRoomFilter",
+    filters.labRooms
+  );
+
+  cmPopulateSelect(
+    "cmFloorFilter",
+    filters.floors
+  );
+
+  cmPopulateSelect(
+    "cmAssetTypeFilter",
+    filters.assetTypes
+  );
+
+  cmPopulateSelect(
+    "cmOsFilter",
+    filters.operatingSystems
+  );
+
+  cmPopulateSelect(
+    "cmCpuBrandFilter",
+    filters.cpuBrands
+  );
+
+  cmPopulateSelect(
+    "cmProcessorFilter",
+    filters.processors
+  );
+
+  cmPopulateSelect(
+    "cmRamFilter",
+    filters.ramOptions
+  );
+
+  cmPopulateSelect(
+    "cmStorageFilter",
+    filters.primaryStorageOptions
+  );
+
+  cmPopulateSelect(
+    "cmGraphicCardFilter",
+    filters.graphicCards
+  );
+
+  cmPopulateSelect(
+    "cmUserFilter",
+    filters.users
+  );
+
+}
+
+
+function cmPopulateSelect(id, values) {
+
+  const select =
+    document.getElementById(id);
+
+  if (!select) {
+    return;
+  }
+
+  values = values || [];
+
+  values.forEach(function(value) {
+
+    const option =
+      document.createElement("option");
+
+    option.value = value;
+    option.textContent = value;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+/* =====================================================
+   GET CURRENT FILTER
+===================================================== */
+
+function cmGetCurrentFilter() {
+
+  return {
+
+    search:
+      document.getElementById(
+        "cmSearchInput"
+      ).value.trim(),
+
+    building:
+      document.getElementById(
+        "cmBuildingFilter"
+      ).value,
+
+    labRoom:
+      document.getElementById(
+        "cmLabRoomFilter"
+      ).value,
+
+    floor:
+      document.getElementById(
+        "cmFloorFilter"
+      ).value,
+
+    assetType:
+      document.getElementById(
+        "cmAssetTypeFilter"
+      ).value,
+
+    os:
+      document.getElementById(
+        "cmOsFilter"
+      ).value,
+
+    cpuBrand:
+      document.getElementById(
+        "cmCpuBrandFilter"
+      ).value,
+
+    processor:
+      document.getElementById(
+        "cmProcessorFilter"
+      ).value,
+
+    ram:
+      document.getElementById(
+        "cmRamFilter"
+      ).value,
+
+    primaryStorage:
+      document.getElementById(
+        "cmStorageFilter"
+      ).value,
+
+    graphicCard:
+      document.getElementById(
+        "cmGraphicCardFilter"
+      ).value,
+
+    userName:
+      document.getElementById(
+        "cmUserFilter"
+      ).value
+
+  };
+
+}
+
+
+/* =====================================================
+   APPLY FILTERS
+===================================================== */
+
+function cmApplyFilters() {
+
+  const filter =
+    cmGetCurrentFilter();
+
+  cmShowLoading();
+
+  Promise.all([
+
+    cmCallAppsScript(
+      "getComputerList",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getComputerStats",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getComputerBuildingChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getOSDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getRAMDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getStorageDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    ),
+
+    cmCallAppsScript(
+      "getGraphicCardDistributionChart",
+      [CM_SESSION_TOKEN, filter]
+    )
+
+  ])
+
+  .then(function(results) {
+
+    cmCurrentComputers =
+      results[0] || [];
+
+    cmRenderComputerTable(
+      cmCurrentComputers
+    );
+
+    cmUpdateStatistics(
+      results[1] || {}
+    );
+
+cmRenderAnalyticsCharts(
+
+  results[2],
+
+  results[3],
+
+  results[4],
+
+  results[5],
+
+  results[6]
+
+);
+
+    cmHideLoading();
+
+  })
+
+  .catch(function(error) {
+
+    cmHideLoading();
+
+    cmShowError(
+      error.message || error
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   RESET FILTERS
+===================================================== */
+
+function cmResetFilters() {
+
+  document.getElementById(
+    "cmSearchInput"
+  ).value = "";
+
+  const filterIds = [
+
+    "cmBuildingFilter",
+    "cmLabRoomFilter",
+    "cmFloorFilter",
+    "cmAssetTypeFilter",
+    "cmOsFilter",
+    "cmCpuBrandFilter",
+    "cmProcessorFilter",
+    "cmRamFilter",
+    "cmStorageFilter",
+    "cmGraphicCardFilter",
+    "cmUserFilter"
+
+  ];
+
+  filterIds.forEach(
+    function(id) {
+
+      document.getElementById(
+        id
+      ).value = "";
+
+    }
+  );
+
+  cmApplyFilters();
+
+}
+
+
+/* =====================================================
+   UPDATE STATISTICS
+===================================================== */
+
+function cmUpdateStatistics(stats) {
+
+  document.getElementById(
+    "cmTotalComputers"
+  ).textContent =
+    stats.totalComputers || 0;
+
+  document.getElementById(
+    "cmTotalBuildings"
+  ).textContent =
+    stats.totalBuildings || 0;
+
+  document.getElementById(
+    "cmTotalLabsRooms"
+  ).textContent =
+    stats.totalLabsRooms || 0;
+
+  document.getElementById(
+    "cmAssignedUsers"
+  ).textContent =
+    stats.assignedUsers || 0;
+
+  document.getElementById(
+    "cmTotalPrinters"
+  ).textContent =
+    stats.printers || 0;
+
+}
+
+
+/* =====================================================
+   RENDER COMPUTER TABLE
+===================================================== */
+
+function cmRenderComputerTable(computers) {
+
+  computers = computers || [];
+
+  const tableBody =
+    document.getElementById(
+      "cmComputerTableBody"
+    );
+
+  document.getElementById(
+    "cmComputerCount"
+  ).textContent =
+    computers.length + " Computers";
+
+  tableBody.innerHTML = "";
+
+  if (computers.length === 0) {
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="10" class="empty-message">
+          No computers found
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+computers.forEach(function(computer) {
+
+  const row =
+    document.createElement("tr");
+
+  row.style.cursor = "pointer";
+
+
+  row.addEventListener(
+    "click",
+    function() {
+
+      /* Remove highlight from all rows */
+
+      document
+        .querySelectorAll(
+          "#cmComputerTableBody tr"
+        )
+        .forEach(function(tableRow) {
+
+          tableRow.classList.remove(
+            "cm-selected-row"
+          );
+
+        });
+
+
+      /* Highlight current row */
+
+      row.classList.add(
+        "cm-selected-row"
+      );
+
+
+      /* Open computer details */
+
+      cmViewComputer(
+        computer.computerNo
+      );
+
+    }
+  );
+
+
+  row.innerHTML = `
+
+    <td>${cmEscapeHtml(computer.slNo)}</td>
+    <td>${cmEscapeHtml(computer.buildingName)}</td>
+    <td>${cmEscapeHtml(computer.labRoomName)}</td>
+    <td>${cmEscapeHtml(computer.computerNo)}</td>
+    <td>${cmEscapeHtml(computer.processor)}</td>
+    <td>${cmEscapeHtml(computer.ram)}</td>
+    <td>${cmEscapeHtml(computer.primaryStorage)}</td>
+    <td>${cmEscapeHtml(computer.os)}</td>
+    <td>${cmEscapeHtml(computer.userName)}</td>
+
+    <td>
+      <button
+        class="btn-view"
+        type="button"
+      >
+        View
+      </button>
+    </td>
+
+  `;
+
+
+  const viewButton =
+    row.querySelector(".btn-view");
+
+
+  viewButton.addEventListener(
+    "click",
+    function(event) {
+
+      event.stopPropagation();
+
+
+      /* Remove previous highlight */
+
+      document
+        .querySelectorAll(
+          "#cmComputerTableBody tr"
+        )
+        .forEach(function(tableRow) {
+
+          tableRow.classList.remove(
+            "cm-selected-row"
+          );
+
+        });
+
+
+      /* Highlight this row */
+
+      row.classList.add(
+        "cm-selected-row"
+      );
+
+
+      cmViewComputer(
+        computer.computerNo
+      );
+
+    }
+  );
+
+
+  tableBody.appendChild(row);
+
+});
+}
+
+
+/* =====================================================
+   VIEW COMPUTER
+===================================================== */
+
+function cmViewComputer(computerNo) {
+
+  cmShowLoading();
+
+  cmCallAppsScript(
+    "getComputerDetails",
+    [
+      CM_SESSION_TOKEN,
+      computerNo
+    ]
+  )
+
+  .then(function(computer) {
+
+    cmHideLoading();
+
+
+    if (!computer) {
+
+      cmShowError(
+        "Computer details not found."
+      );
+
+      return;
+
+    }
+
+
+    /* Render details */
+
+    cmRenderDetailsPanel(
+      computer
+    );
+
+
+    /* Update title */
+
+    document.getElementById(
+      "cmDetailsPanelTitle"
+    ).textContent =
+      "Computer: " +
+      computer.computerNo;
+
+
+    /* Show panel */
+
+document.getElementById(
+  "cmDetailsPanel"
+).style.display = "block";
+
+document.querySelector(
+  ".cm-main-workspace"
+).classList.add(
+  "panel-open"
+);
+
+  })
+
+  .catch(function(error) {
+
+    cmHideLoading();
+
+    cmShowError(
+      error.message || error
+    );
+
+  });
+
+}
+
+function cmRenderDetailsPanel(computer) {
+
+  const container =
+    document.getElementById(
+      "cmDetailsPanelContent"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Location & User
+      </div>
+
+      ${cmDetailRow(
+        "Building",
+        computer.buildingName
+      )}
+
+      ${cmDetailRow(
+        "Lab / Room",
+        computer.labRoomName
+      )}
+
+      ${cmDetailRow(
+        "Floor",
+        computer.floor
+      )}
+
+      ${cmDetailRow(
+        "Level",
+        computer.level
+      )}
+
+      ${cmDetailRow(
+        "User",
+        computer.userName
+      )}
+
+    </div>
+
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Hardware Configuration
+      </div>
+
+      ${cmDetailRow(
+        "CPU Brand",
+        computer.cpuBrand
+      )}
+
+      ${cmDetailRow(
+        "Processor",
+        computer.processor
+      )}
+
+      ${cmDetailRow(
+        "Motherboard",
+        computer.motherboard
+      )}
+
+      ${cmDetailRow(
+        "RAM",
+        computer.ram
+      )}
+
+      ${cmDetailRow(
+        "Graphic Card",
+        computer.graphicCard
+      )}
+
+    </div>
+
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Storage Details
+      </div>
+
+      ${cmDetailRow(
+        "Primary",
+        computer.primaryStorage
+      )}
+
+      ${cmDetailRow(
+        "Secondary",
+        computer.secondaryStorage
+      )}
+
+      ${cmDetailRow(
+        "External",
+        computer.externalStorage
+      )}
+
+    </div>
+
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        System & Network
+      </div>
+
+      ${cmDetailRow(
+        "OS",
+        computer.os
+      )}
+
+      ${cmDetailRow(
+        "MAC Address",
+        computer.macAddress
+      )}
+
+      ${cmDetailRow(
+        "Asset Type",
+        computer.assetType
+      )}
+
+    </div>
+
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Printer Details
+      </div>
+
+      ${cmDetailRow(
+        "Printer Brand",
+        computer.printerBrand
+      )}
+
+      ${cmDetailRow(
+        "Printer Model",
+        computer.printerModel
+      )}
+
+      ${cmDetailRow(
+        "Printer Type",
+        computer.printerType
+      )}
+
+    </div>
+
+  `;
+
+}
+function cmDetailRow(label, value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    value = "-";
+
+  }
+
+
+  return `
+
+    <div class="cm-detail-row">
+
+      <div class="cm-detail-label">
+        ${cmEscapeHtml(label)}
+      </div>
+
+      <div class="cm-detail-value">
+        ${cmEscapeHtml(value)}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   FORMAT DETAIL VALUE
+===================================================== */
+
+function cmFormatDetailValue(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return "-";
+
+  }
+
+  const text =
+    String(value);
+
+
+  if (
+    text.startsWith("http://") ||
+    text.startsWith("https://")
+  ) {
+
+    return `
+      <a
+        href="${cmEscapeAttribute(text)}"
+        target="_blank"
+      >
+        Open Link
+      </a>
+    `;
+
+  }
+
+  return cmEscapeHtml(text);
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function cmCloseComputerModal() {
+
+  document.getElementById(
+    "cmComputerModal"
+  ).style.display = "none";
+
+}
+
+
+/* =====================================================
+   RENDER SUMMARY
+===================================================== */
+
+function cmRenderSummary(
+  containerId,
+  data,
+  labelKey
+) {
+
+  const container =
+    document.getElementById(
+      containerId
+    );
+
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = "";
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML =
+      "<div class='empty-message'>No data available</div>";
+
+    return;
+
+  }
+
+  data.forEach(
+    function(item) {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "summary-item";
+
+      div.innerHTML = `
+
+        <span>
+          ${cmEscapeHtml(
+            item[labelKey] || "Unknown"
+          )}
+        </span>
+
+        <span class="summary-count">
+          ${item.count}
+        </span>
+
+      `;
+
+      container.appendChild(div);
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+function cmShowLoading() {
+
+  document.getElementById(
+    "cmLoadingOverlay"
+  ).style.display = "flex";
+
+}
+
+
+function cmHideLoading() {
+
+  document.getElementById(
+    "cmLoadingOverlay"
+  ).style.display = "none";
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+function cmShowError(message) {
+
+  const errorBox =
+    document.getElementById(
+      "cmErrorBox"
+    );
+
+  errorBox.textContent = message;
+
+  errorBox.style.display = "block";
+
+  console.error(message);
+
+  setTimeout(
+    function() {
+
+      errorBox.style.display = "none";
+
+    },
+    7000
+  );
+
+}
+
+
+/* =====================================================
+   SECURITY HELPERS
+===================================================== */
+
+function cmEscapeHtml(value) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return "";
+
+  }
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    String(value);
+
+  return div.innerHTML;
+
+}
+
+
+function cmEscapeAttribute(value) {
+
+  return cmEscapeHtml(value)
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+(function cmSetupComputerManagement() {
+
+  const page =
+    document.getElementById(
+      "computerManagementPage"
+    );
+
+  if (!page) {
+    return;
+  }
+
+
+  const searchInput =
+    document.getElementById(
+      "cmSearchInput"
+    );
+
+  if (searchInput) {
+
+    searchInput.addEventListener(
+      "keypress",
+      function(event) {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          cmApplyFilters();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  const modal =
+    document.getElementById(
+      "cmComputerModal"
+    );
+
+  if (modal) {
+
+    modal.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target === modal
+        ) {
+
+          cmCloseComputerModal();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  cmInitializeComputerManagement();
+
+})();
+
+function cmCloseDetailsPanel() {
+
+  /* Close details panel */
+  document.getElementById(
+    "cmDetailsPanel"
+  ).style.display = "none";
+
+
+  /* Restore workspace */
+  document.querySelector(
+    ".cm-main-workspace"
+  ).classList.remove(
+    "panel-open"
+  );
+
+
+  /* Remove selected row highlight */
+  document
+    .querySelectorAll(
+      "#cmComputerTableBody tr"
+    )
+    .forEach(function(row) {
+
+      row.classList.remove(
+        "cm-selected-row"
+      );
+
+    });
+
+}
+function cmGetChartColors(count) {
+
+  const colors = [
+
+    "#2563eb",
+    "#10b981",
+    "#f59e0b",
+    "#8b5cf6",
+    "#ef4444",
+    "#06b6d4",
+    "#ec4899",
+    "#84cc16",
+    "#f97316",
+    "#6366f1",
+    "#14b8a6",
+    "#a855f7"
+
+  ];
+
+
+  const result = [];
+
+
+  for (
+    let i = 0;
+    i < count;
+    i++
+  ) {
+
+    result.push(
+      colors[i % colors.length]
+    );
+
+  }
+
+
+  return result;
+
+}
+function cmRenderBuildingChart(data) {
+
+  const canvas =
+    document.getElementById(
+      "cmBuildingChart"
+    );
+
+
+  if (!canvas) {
+    return;
+  }
+
+
+  if (cmBuildingChart) {
+
+    cmBuildingChart.destroy();
+
+  }
+
+
+  data = data || [];
+
+
+  const topData =
+    data.slice(0, 10);
+
+
+  cmBuildingChart =
+    new Chart(
+      canvas,
+      {
+
+        type:
+          "bar",
+
+        data: {
+
+          labels:
+            topData.map(
+              item => item.building
+            ),
+
+          datasets: [
+
+            {
+
+              label:
+                "Computers",
+
+              data:
+                topData.map(
+                  item => item.count
+                ),
+
+              backgroundColor:
+                "#2563eb",
+
+              borderRadius:
+                6,
+
+              borderSkipped:
+                false
+
+            }
+
+          ]
+
+        },
+
+
+        options: {
+
+          responsive:
+            true,
+
+          maintainAspectRatio:
+            false,
+
+          indexAxis:
+            "y",
+
+          plugins: {
+
+            legend: {
+
+              display:
+                false
+
+            }
+
+          },
+
+
+          scales: {
+
+            x: {
+
+              beginAtZero:
+                true,
+
+              grid: {
+
+                color:
+                  "#edf1f5"
+
+              }
+
+            },
+
+
+            y: {
+
+              grid: {
+
+                display:
+                  false
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+    );
+
+}
+function cmRenderDonutChart(
+  existingChart,
+  canvasId,
+  data,
+  labelKey
+) {
+
+  const canvas =
+    document.getElementById(canvasId);
+
+  if (!canvas) {
+    return null;
+  }
+
+
+  /* Destroy previous chart */
+
+  if (
+    existingChart &&
+    typeof existingChart.destroy === "function"
+  ) {
+
+    existingChart.destroy();
+
+  }
+
+
+  data =
+    Array.isArray(data)
+      ? data
+      : [];
+
+
+  /* Original complete data */
+
+  const originalLabels =
+    data.map(function(item) {
+
+      return item[labelKey] || "Unknown";
+
+    });
+
+
+  const originalValues =
+    data.map(function(item) {
+
+      return Number(item.count) || 0;
+
+    });
+
+
+  const originalColors =
+    cmGetChartColors(data.length);
+
+
+  /*
+    Store selected item.
+
+    null = show all
+  */
+
+  let selectedIndex = null;
+
+
+  /*
+    Restore all chart data
+  */
+
+  function showAll(chart) {
+
+    selectedIndex = null;
+
+    chart.data.labels =
+      [...originalLabels];
+
+    chart.data.datasets[0].data =
+      [...originalValues];
+
+    chart.data.datasets[0].backgroundColor =
+      [...originalColors];
+
+    chart.update();
+
+  }
+
+
+  /*
+    Show only selected item
+  */
+
+  function showOnly(chart, index) {
+
+    selectedIndex = index;
+
+    chart.data.labels = [
+      originalLabels[index]
+    ];
+
+    chart.data.datasets[0].data = [
+      originalValues[index]
+    ];
+
+    chart.data.datasets[0].backgroundColor = [
+      originalColors[index]
+    ];
+
+    chart.update();
+
+  }
+
+
+  /*
+    Handle selection
+  */
+
+  function handleSelection(chart, index) {
+
+    /*
+      If already showing only one item,
+      clicking again restores all
+    */
+
+    if (
+      selectedIndex !== null &&
+      selectedIndex === index
+    ) {
+
+      showAll(chart);
+
+      return;
+
+    }
+
+
+    /*
+      If already filtered and click chart,
+      restore all
+    */
+
+    if (
+      selectedIndex !== null &&
+      chart.data.labels.length === 1
+    ) {
+
+      showAll(chart);
+
+      return;
+
+    }
+
+
+    /*
+      Show selected item only
+    */
+
+    showOnly(
+      chart,
+      index
+    );
+
+  }
+
+
+  const chart =
+    new Chart(
+      canvas,
+      {
+
+        type: "doughnut",
+
+
+        data: {
+
+          labels:
+            [...originalLabels],
+
+          datasets: [
+
+            {
+
+              data:
+                [...originalValues],
+
+              backgroundColor:
+                [...originalColors],
+
+              borderWidth:
+                2,
+
+              borderColor:
+                "#ffffff"
+
+            }
+
+          ]
+
+        },
+
+
+        options: {
+
+          responsive:
+            true,
+
+          maintainAspectRatio:
+            false,
+
+          cutout:
+            "58%",
+
+
+          /*
+            CLICK DONUT PART
+          */
+
+          onClick: function(
+            event,
+            elements,
+            chartInstance
+          ) {
+
+            if (
+              !elements ||
+              elements.length === 0
+            ) {
+
+              return;
+
+            }
+
+
+            /*
+              If chart currently contains
+              only one item, restore all
+            */
+
+            if (
+              selectedIndex !== null &&
+              chartInstance.data.labels.length === 1
+            ) {
+
+              showAll(chartInstance);
+
+              return;
+
+            }
+
+
+            const index =
+              elements[0].index;
+
+
+            handleSelection(
+              chartInstance,
+              index
+            );
+
+          },
+
+
+          plugins: {
+
+            legend: {
+
+              position:
+                "right",
+
+
+              /*
+                CLICK LEGEND
+              */
+
+              onClick: function(
+                event,
+                legendItem,
+                legend
+              ) {
+
+                const chartInstance =
+                  legend.chart;
+
+
+                /*
+                  Find original index
+                  using label text
+                */
+
+                const index =
+                  originalLabels.indexOf(
+                    legendItem.text
+                  );
+
+
+                if (
+                  index === -1
+                ) {
+
+                  return;
+
+                }
+
+
+                /*
+                  If same item selected,
+                  restore all
+                */
+
+                if (
+                  selectedIndex === index
+                ) {
+
+                  showAll(chartInstance);
+
+                  return;
+
+                }
+
+
+                /*
+                  Show only selected
+                */
+
+                showOnly(
+                  chartInstance,
+                  index
+                );
+
+              },
+
+
+labels: {
+
+  boxWidth: 10,
+
+  padding: 12,
+
+  font: {
+
+    size: 11
+
+  },
+
+  generateLabels: function(chart) {
+
+    const dataset =
+      chart.data.datasets[0];
+
+    return chart.data.labels.map(
+      function(label, index) {
+
+        return {
+
+          text:
+            label +
+            " (" +
+            dataset.data[index] +
+            ")",
+
+          fillStyle:
+            dataset.backgroundColor[index],
+
+          strokeStyle:
+            dataset.backgroundColor[index],
+
+          lineWidth: 0,
+
+          hidden: false,
+
+          index: index
+
+        };
+
+      }
+    );
+
+  }
+
+}
+
+            },
+
+
+            tooltip: {
+
+              callbacks: {
+
+                label:
+                  function(context) {
+
+                    return (
+                      context.label +
+                      ": " +
+                      context.raw
+                    );
+
+                  }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+    );
+
+
+  return chart;
+
+}
+function cmRenderAnalyticsCharts(
+  buildingData,
+  osData,
+  ramData,
+  storageData,
+  graphicData
+) {
+
+  /* Building Chart */
+
+  cmRenderBuildingChart(
+    buildingData
+  );
+
+
+  /* OS Chart */
+
+  cmOsChart =
+    cmRenderDonutChart(
+      cmOsChart,
+      "cmOsChart",
+      osData,
+      "os"
+    );
+
+
+  /* RAM Chart */
+
+  cmRamChart =
+    cmRenderDonutChart(
+      cmRamChart,
+      "cmRamChart",
+      ramData,
+      "ram"
+    );
+
+
+  /* Storage Chart */
+
+  cmStorageChart =
+    cmRenderDonutChart(
+      cmStorageChart,
+      "cmStorageChart",
+      storageData,
+      "storage"
+    );
+
+
+  /* Graphic Card Chart */
+
+  cmGraphicCardChart =
+    cmRenderDonutChart(
+      cmGraphicCardChart,
+      "cmGraphicCardChart",
+      graphicData,
+      "graphicCard"
+    );
+
+}
+
+</script>
