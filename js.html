@@ -671,28 +671,59 @@ computers.forEach(function(computer) {
   );
 
 
-  row.innerHTML = `
+row.innerHTML = `
 
-    <td>${cmEscapeHtml(computer.slNo)}</td>
-    <td>${cmEscapeHtml(computer.buildingName)}</td>
-    <td>${cmEscapeHtml(computer.labRoomName)}</td>
-    <td>${cmEscapeHtml(computer.computerNo)}</td>
-    <td>${cmEscapeHtml(computer.processor)}</td>
-    <td>${cmEscapeHtml(computer.ram)}</td>
-    <td>${cmEscapeHtml(computer.primaryStorage)}</td>
-    <td>${cmEscapeHtml(computer.os)}</td>
-    <td>${cmEscapeHtml(computer.userName)}</td>
+  <td>${cmEscapeHtml(computer.slNo)}</td>
 
-    <td>
-      <button
-        class="btn-view"
-        type="button"
-      >
-        View
-      </button>
-    </td>
+  <td>
+    <strong>
+      ${cmEscapeHtml(computer.computerNo)}
+    </strong>
+  </td>
 
-  `;
+  <td>
+    ${cmEscapeHtml(computer.buildingName)}
+  </td>
+
+  <td>
+    ${cmEscapeHtml(computer.labRoomName)}
+  </td>
+
+  <td>
+    ${cmEscapeHtml(computer.userName)}
+  </td>
+
+  <td>
+    ${cmEscapeHtml(computer.processor)}
+  </td>
+
+  <td>
+    ${cmEscapeHtml(computer.ram)}
+  </td>
+
+  <td>
+    ${cmEscapeHtml(computer.primaryStorage)}
+  </td>
+
+  <td>
+    ${cmEscapeHtml(computer.os)}
+  </td>
+
+  <td>
+
+    <button
+      class="btn-view"
+      type="button"
+      title="View Computer Details"
+    >
+
+      <i class="fa-solid fa-eye"></i>
+
+    </button>
+
+  </td>
+
+`;
 
 
   const viewButton =
