@@ -861,6 +861,25 @@ function cmRenderDetailsPanel(computer) {
     );
 
 
+  /* =====================================
+     CREATE COMPUTER-SPECIFIC QR LINK
+  ===================================== */
+
+  const computerNo =
+    String(
+      computer.computerNo || ""
+    ).trim();
+
+
+const baseUrl =
+  "https://script.google.com/a/macros/driems.ac.in/s/AKfycbyJ0bonEq8MCDR_g68G36f7PWUwZVzFbvklI5driP8cttL0c8xzWzNrSPg6A4Dn9wE2cQ/exec";
+
+const qrLink =
+  baseUrl +
+  "?id=" +
+  encodeURIComponent(computerNo);
+
+
   container.innerHTML = `
 
     <div class="cm-detail-section">
@@ -1037,28 +1056,28 @@ function cmRenderDetailsPanel(computer) {
 
   <div class="cm-qr-container">
 
-    <img
-      id="cmComputerQRCode"
-      src="https://quickchart.io/qr?size=600&margin=2&ecLevel=M&format=png&text=${encodeURIComponent(computer.qrCodeLink || '')}"
-      alt="Computer QR Code"
-      width="180"
-      height="180"
-    >
+<img
+  id="cmComputerQRCode"
+  src="https://quickchart.io/qr?size=600&margin=2&ecLevel=M&format=png&text=${encodeURIComponent(qrLink)}&v=${Date.now()}"
+  alt="Computer QR Code"
+  width="180"
+  height="180"
+>
 
-    <div class="cm-qr-computer-no">
-      ${cmEscapeHtml(computer.computerNo || "")}
-    </div>
+<div class="cm-qr-computer-no">
+  ${cmEscapeHtml(computerNo)}
+</div>
 
-    <button
-      id="cmDownloadQRButton"
-      type="button"
-      class="btn-download-qr"
-      data-computer-no="${cmEscapeAttribute(computer.computerNo || "")}"
-      data-qr-link="${cmEscapeAttribute(computer.qrCodeLink || "")}"
-    >
-      <i class="fa-solid fa-download"></i>
-      Download QR
-    </button>
+<button
+  id="cmDownloadQRButton"
+  type="button"
+  class="btn-download-qr"
+  data-computer-no="${cmEscapeAttribute(computerNo)}"
+  data-qr-link="${cmEscapeAttribute(qrLink)}"
+>
+  <i class="fa-solid fa-download"></i>
+  Download QR
+</button>
 
   </div>
 
@@ -2118,7 +2137,9 @@ function cmDownloadQRCode(
     String(qrLink || "").trim();
 
 
-  /* VALIDATION */
+  /* =========================
+     VALIDATION
+  ========================== */
 
   if (!computerNo) {
 
@@ -2147,9 +2168,13 @@ function cmDownloadQRCode(
   );
 
 
-  /*
-    CREATE QR URL
-  */
+  /* =========================
+     CREATE QR IMAGE URL
+
+     IMPORTANT:
+     qrLink is the data encoded
+     inside the QR code.
+  ========================== */
 
   const qrUrl =
     "https://quickchart.io/qr" +
@@ -2161,9 +2186,9 @@ function cmDownloadQRCode(
     encodeURIComponent(qrLink);
 
 
-  /*
-    DOWNLOAD USING FETCH
-  */
+  /* =========================
+     FETCH QR IMAGE
+  ========================== */
 
   fetch(qrUrl)
 
@@ -2180,6 +2205,7 @@ function cmDownloadQRCode(
       return response.blob();
 
     })
+
 
     .then(function(qrBlob) {
 
@@ -2198,27 +2224,37 @@ function cmDownloadQRCode(
 
           try {
 
+            /* =========================
+               CANVAS SETTINGS
+            ========================== */
+
+            const qrSize =
+              1000;
+
+            const topSpace =
+              180;
+
+
             const canvas =
               document.createElement(
                 "canvas"
               );
 
 
-            const qrSize =
-              1000;
+            /*
+              TOTAL IMAGE SIZE
 
-
-            const headerHeight =
-              160;
-
+              COMPUTER NO
+              +
+              QR CODE
+            */
 
             canvas.width =
               qrSize;
 
-
             canvas.height =
-              qrSize +
-              headerHeight;
+              topSpace +
+              qrSize;
 
 
             const ctx =
@@ -2236,9 +2272,9 @@ function cmDownloadQRCode(
             }
 
 
-            /*
-              WHITE BACKGROUND
-            */
+            /* =========================
+               WHITE BACKGROUND
+            ========================== */
 
             ctx.fillStyle =
               "#FFFFFF";
@@ -2252,16 +2288,17 @@ function cmDownloadQRCode(
             );
 
 
-            /*
-              COMPUTER NUMBER
-            */
+            /* =========================
+               COMPUTER NUMBER
+               AT THE TOP
+            ========================== */
 
             ctx.fillStyle =
               "#000000";
 
 
             ctx.font =
-              "bold 52px Arial";
+              "bold 58px Arial";
 
 
             ctx.textAlign =
@@ -2275,26 +2312,27 @@ function cmDownloadQRCode(
             ctx.fillText(
               computerNo,
               canvas.width / 2,
-              headerHeight / 2
+              topSpace / 2
             );
 
 
-            /*
-              DRAW QR CODE
-            */
+            /* =========================
+               DRAW QR CODE
+               BELOW COMPUTER NUMBER
+            ========================== */
 
             ctx.drawImage(
               qrImage,
               0,
-              headerHeight,
+              topSpace,
               qrSize,
               qrSize
             );
 
 
-            /*
-              CREATE FINAL PNG
-            */
+            /* =========================
+               CREATE PNG
+            ========================== */
 
             canvas.toBlob(
 
@@ -2302,9 +2340,13 @@ function cmDownloadQRCode(
 
                 if (!finalBlob) {
 
-                  throw new Error(
-                    "Unable to create final QR image."
+                  cmHideLoading();
+
+                  cmShowError(
+                    "Unable to create QR image."
                   );
+
+                  return;
 
                 }
 
@@ -2341,7 +2383,9 @@ function cmDownloadQRCode(
                 downloadLink.click();
 
 
-                downloadLink.remove();
+                document.body.removeChild(
+                  downloadLink
+                );
 
 
                 setTimeout(
@@ -2352,7 +2396,7 @@ function cmDownloadQRCode(
                     );
 
                   },
-                  1000
+                  2000
                 );
 
 
@@ -2376,6 +2420,11 @@ function cmDownloadQRCode(
             console.error(
               "QR Processing Error:",
               error
+            );
+
+
+            URL.revokeObjectURL(
+              qrBlobUrl
             );
 
 
@@ -2404,7 +2453,7 @@ function cmDownloadQRCode(
 
 
           cmShowError(
-            "Unable to process QR image."
+            "Unable to load QR image."
           );
 
         };
@@ -2414,6 +2463,7 @@ function cmDownloadQRCode(
         qrBlobUrl;
 
     })
+
 
     .catch(function(error) {
 
