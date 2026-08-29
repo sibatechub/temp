@@ -874,19 +874,14 @@ function cmRenderDetailsPanel(computer) {
         computer.buildingName
       )}
 
-      ${cmDetailRow(
-        "Lab / Room",
-        computer.labRoomName
-      )}
-
-      ${cmDetailRow(
+            ${cmDetailRow(
         "Floor",
         computer.floor
       )}
 
       ${cmDetailRow(
-        "Level",
-        computer.level
+        "Lab / Room",
+        computer.labRoomName
       )}
 
       ${cmDetailRow(
@@ -896,17 +891,49 @@ function cmRenderDetailsPanel(computer) {
 
     </div>
 
-
-    <div class="cm-detail-section">
+        <div class="cm-detail-section">
 
       <div class="cm-detail-section-title">
-        Hardware Configuration
+        Brand Details
       </div>
 
       ${cmDetailRow(
         "CPU Brand",
         computer.cpuBrand
       )}
+        ${cmDetailRow(
+
+    "Monitor Brand",
+
+    computer.monitorBrand
+
+  )}
+
+  ${cmDetailRow(
+
+    "Keyboard Brand",
+
+    computer.keyboardBrand
+
+  )}
+
+  ${cmDetailRow(
+
+    "Mouse Brand",
+
+    computer.mouseBrand
+
+  )}
+  
+
+      </div>
+
+          <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Hardware Configuration
+      </div>
+      
 
       ${cmDetailRow(
         "Processor",
