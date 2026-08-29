@@ -977,9 +977,13 @@
 
   top: 15px;
 
-  max-height: calc(100vh - 30px);
+  height: calc(100vh - 110px);
 
-  overflow-y: auto;
+  max-height: calc(100vh - 110px);
+
+  overflow: hidden;
+
+  min-width: 0;
 
 }
 
@@ -995,6 +999,7 @@
   padding: 18px;
 
   border-bottom: 1px solid #edf0f5;
+  flex-shrink: 0;
 
 }
 
@@ -1046,6 +1051,14 @@
 #computerManagementPage #cmDetailsPanelContent {
 
   padding: 14px;
+
+  height: calc(100vh - 180px);
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  scrollbar-width: thin;
 
 }
 
