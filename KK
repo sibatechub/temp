@@ -1,0 +1,527 @@
+function cmRenderDetailsPanel(computer) {
+
+  const container =
+    document.getElementById(
+      "cmDetailsPanelContent"
+    );
+
+  container.innerHTML = `
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Location & User
+      </div>
+
+      ${cmDetailRow(
+        "Building",
+        computer.buildingName
+      )}
+
+            ${cmDetailRow(
+        "Floor",
+        computer.floor
+      )}
+
+      ${cmDetailRow(
+        "Lab / Room",
+        computer.labRoomName
+      )}
+
+      ${cmDetailRow(
+        "User",
+        computer.userName
+      )}
+
+    </div>
+
+        <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Brand Details
+      </div>
+
+      ${cmDetailRow(
+        "CPU Brand",
+        computer.cpuBrand
+      )}
+        ${cmDetailRow(
+
+    "Monitor Brand",
+
+    computer.monitorBrand
+
+  )}
+
+  ${cmDetailRow(
+
+    "Keyboard Brand",
+
+    computer.keyboardBrand
+
+  )}
+
+  ${cmDetailRow(
+
+    "Mouse Brand",
+
+    computer.mouseBrand
+
+  )}
+  
+
+      </div>
+
+          <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Hardware Configuration
+      </div>
+      
+
+      ${cmDetailRow(
+        "Processor",
+        computer.processor
+      )}
+
+      ${cmDetailRow(
+        "Motherboard",
+        computer.motherboard
+      )}
+
+      ${cmDetailRow(
+        "RAM",
+        computer.ram
+      )}
+
+      ${cmDetailRow(
+        "Graphic Card",
+        computer.graphicCard
+      )}
+
+    </div>
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Storage Details
+      </div>
+
+      ${cmDetailRow(
+        "Primary",
+        computer.primaryStorage
+      )}
+
+      ${cmDetailRow(
+        "Secondary",
+        computer.secondaryStorage
+      )}
+
+      ${cmDetailRow(
+        "External",
+        computer.externalStorage
+      )}
+
+    </div>
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        System & Network
+      </div>
+
+      ${cmDetailRow(
+        "OS",
+        computer.os
+      )}
+
+      ${cmDetailRow(
+        "MAC Address",
+        computer.macAddress
+      )}
+
+      ${cmDetailRow(
+        "Asset Type",
+        computer.assetType
+      )}
+
+    </div>
+
+    <div class="cm-detail-section">
+
+      <div class="cm-detail-section-title">
+        Printer Details
+      </div>
+
+      ${cmDetailRow(
+        "Printer Brand",
+        computer.printerBrand
+      )}
+
+      ${cmDetailRow(
+        "Printer Model",
+        computer.printerModel
+      )}
+
+      ${cmDetailRow(
+        "Printer Type",
+        computer.printerType
+      )}
+
+    </div>
+
+<div class="cm-detail-section">
+
+  <div class="cm-detail-section-title">
+    QR Code
+  </div>
+
+  <div class="cm-qr-container">
+
+    <img
+      id="cmComputerQRCode"
+      src="https://quickchart.io/qr?size=600&margin=2&ecLevel=M&format=png&text=${encodeURIComponent(computer.qrCodeLink || '')}"
+      alt="Computer QR Code"
+      width="180"
+      height="180"
+    >
+
+    <div class="cm-qr-computer-no">
+      ${cmEscapeHtml(computer.computerNo || "")}
+    </div>
+
+    <button
+      id="cmDownloadQRButton"
+      type="button"
+      class="btn-download-qr"
+      data-computer-no="${cmEscapeAttribute(computer.computerNo || "")}"
+      data-qr-link="${cmEscapeAttribute(computer.qrCodeLink || "")}"
+    >
+      <i class="fa-solid fa-download"></i>
+      Download QR
+    </button>
+
+  </div>
+
+</div>
+
+  `;
+  const downloadButton =
+  document.getElementById(
+    "cmDownloadQRButton"
+  );
+
+if (downloadButton) {
+
+  downloadButton.addEventListener(
+    "click",
+    function() {
+
+      const computerNo =
+        downloadButton.dataset.computerNo || "";
+
+      const qrLink =
+        downloadButton.dataset.qrLink || "";
+
+      cmDownloadQRCode(
+        computerNo,
+        qrLink
+      );
+
+    }
+  );
+
+}
+
+}
+
+and 
+
+function cmDownloadQRCode(
+  computerNo,
+  qrLink
+) {
+
+  computerNo =
+    String(computerNo || "").trim();
+
+  qrLink =
+    String(qrLink || "").trim();
+
+  /* VALIDATION */
+
+  if (!computerNo) {
+
+    cmShowError(
+      "Computer number not found."
+    );
+
+    return;
+
+  }
+
+  if (!qrLink) {
+
+    cmShowError(
+      "QR link not found."
+    );
+
+    return;
+
+  }
+
+  cmShowLoading(
+    "Generating QR Code..."
+  );
+
+  /*
+    CREATE QR URL
+  */
+
+  const qrUrl =
+    "https://quickchart.io/qr" +
+    "?size=1000" +
+    "&margin=2" +
+    "&ecLevel=M" +
+    "&format=png" +
+    "&text=" +
+    encodeURIComponent(qrLink);
+
+  /*
+    DOWNLOAD USING FETCH
+  */
+
+  fetch(qrUrl)
+
+    .then(function(response) {
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Unable to generate QR code."
+        );
+
+      }
+
+      return response.blob();
+
+    })
+
+    .then(function(qrBlob) {
+
+      const qrImage =
+        new Image();
+
+      const qrBlobUrl =
+        URL.createObjectURL(
+          qrBlob
+        );
+
+      qrImage.onload =
+        function() {
+
+          try {
+
+            const canvas =
+              document.createElement(
+                "canvas"
+              );
+
+            const qrSize =
+              1000;
+
+            const headerHeight =
+              160;
+
+            canvas.width =
+              qrSize;
+
+            canvas.height =
+              qrSize +
+              headerHeight;
+
+            const ctx =
+              canvas.getContext(
+                "2d"
+              );
+
+            if (!ctx) {
+
+              throw new Error(
+                "Unable to create canvas."
+              );
+
+            }
+
+            /*
+              WHITE BACKGROUND
+            */
+
+            ctx.fillStyle =
+              "#FFFFFF";
+
+            ctx.fillRect(
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+
+            /*
+              COMPUTER NUMBER
+            */
+
+            ctx.fillStyle =
+              "#000000";
+
+            ctx.font =
+              "bold 52px Arial";
+
+            ctx.textAlign =
+              "center";
+
+            ctx.textBaseline =
+              "middle";
+
+            ctx.fillText(
+              computerNo,
+              canvas.width / 2,
+              headerHeight / 2
+            );
+
+            /*
+              DRAW QR CODE
+            */
+
+            ctx.drawImage(
+              qrImage,
+              0,
+              headerHeight,
+              qrSize,
+              qrSize
+            );
+
+            /*
+              CREATE FINAL PNG
+            */
+
+            canvas.toBlob(
+
+              function(finalBlob) {
+
+                if (!finalBlob) {
+
+                  throw new Error(
+                    "Unable to create final QR image."
+                  );
+
+                }
+
+                const downloadUrl =
+                  URL.createObjectURL(
+                    finalBlob
+                  );
+
+                const downloadLink =
+                  document.createElement(
+                    "a"
+                  );
+
+                downloadLink.href =
+                  downloadUrl;
+
+                downloadLink.download =
+                  computerNo.replace(
+                    /[^a-zA-Z0-9_-]/g,
+                    "_"
+                  ) +
+                  "_QR.png";
+
+                document.body.appendChild(
+                  downloadLink
+                );
+
+                downloadLink.click();
+
+                downloadLink.remove();
+
+                setTimeout(
+                  function() {
+
+                    URL.revokeObjectURL(
+                      downloadUrl
+                    );
+
+                  },
+                  1000
+                );
+
+                URL.revokeObjectURL(
+                  qrBlobUrl
+                );
+
+                cmHideLoading();
+
+              },
+
+              "image/png"
+
+            );
+
+          }
+
+          catch (error) {
+
+            console.error(
+              "QR Processing Error:",
+              error
+            );
+
+            cmHideLoading();
+
+            cmShowError(
+              "QR download failed: " +
+              error.message
+            );
+
+          }
+
+        };
+
+      qrImage.onerror =
+        function() {
+
+          URL.revokeObjectURL(
+            qrBlobUrl
+          );
+
+          cmHideLoading();
+
+          cmShowError(
+            "Unable to process QR image."
+          );
+
+        };
+
+      qrImage.src =
+        qrBlobUrl;
+
+    })
+
+    .catch(function(error) {
+
+      console.error(
+        "QR Download Error:",
+        error
+      );
+
+      cmHideLoading();
+
+      cmShowError(
+        "QR download failed: " +
+        error.message
+      );
+
+    });
+
+}
