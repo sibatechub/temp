@@ -79,7 +79,9 @@ function cmInitializeComputerManagement() {
 
 function cmLoadComputerManagement() {
 
-  cmShowLoading();
+  cmShowLoading(
+  "Loading Computer Dashboard..."
+);
 
   Promise.all([
 
@@ -433,7 +435,9 @@ function cmApplyFilters() {
   const filter =
     cmGetCurrentFilter();
 
-  cmShowLoading();
+ cmShowLoading(
+  "Applying Filters..."
+);
 
   Promise.all([
 
@@ -779,7 +783,9 @@ row.innerHTML = `
 
 function cmViewComputer(computerNo) {
 
-  cmShowLoading();
+  cmShowLoading(
+  "Loading Computer Details..."
+);
 
   cmCallAppsScript(
     "getComputerDetails",
@@ -1150,20 +1156,51 @@ function cmRenderSummary(
    LOADING
 ===================================================== */
 
-function cmShowLoading() {
+function cmShowLoading(message) {
 
-  document.getElementById(
-    "cmLoadingOverlay"
-  ).style.display = "flex";
+  const overlay =
+    document.getElementById(
+      "cmLoadingOverlay"
+    );
+
+  const text =
+    document.getElementById(
+      "cmLoadingText"
+    );
+
+
+  if (text) {
+
+    text.textContent =
+      message ||
+      "Loading Computer Data...";
+
+  }
+
+
+  if (overlay) {
+
+    overlay.style.display =
+      "flex";
+
+  }
 
 }
 
 
 function cmHideLoading() {
 
-  document.getElementById(
-    "cmLoadingOverlay"
-  ).style.display = "none";
+  const overlay =
+    document.getElementById(
+      "cmLoadingOverlay"
+    );
+
+  if (overlay) {
+
+    overlay.style.display =
+      "none";
+
+  }
 
 }
 
