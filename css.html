@@ -1,7 +1,7 @@
 <style>
 
 /* =====================================================
-   COMPUTER MANAGEMENT - FULLY SCOPED CSS
+   COMPUTER MANAGEMENT
 ===================================================== */
 
 #computerManagementPage,
@@ -11,22 +11,24 @@
   padding: 0;
 }
 
+
 #computerManagementPage {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f4f6f9;
-  color: #222;
   width: 100%;
   min-height: 100%;
+  font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background: #f5f7fb;
+  color: #1e293b;
 }
 
 
-/* =====================================================
-   CONTAINER
-===================================================== */
-
 #computerManagementPage .computer-management-container {
-  padding: 20px;
   width: 100%;
+  padding: 22px;
 }
 
 
@@ -34,18 +36,75 @@
    PAGE HEADER
 ===================================================== */
 
-#computerManagementPage .page-header {
-  margin-bottom: 20px;
+#computerManagementPage .cm-page-top {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+
 }
+
 
 #computerManagementPage .page-header h2 {
+
   font-size: 26px;
+
+  font-weight: 700;
+
+  color: #172554;
+
   margin-bottom: 6px;
+
 }
 
+
+#computerManagementPage .page-header h2 i {
+
+  color: #2563eb;
+
+  margin-right: 8px;
+
+}
+
+
 #computerManagementPage .page-header p {
-  color: #666;
+
   font-size: 14px;
+
+  color: #64748b;
+
+}
+
+
+#computerManagementPage .cm-header-btn {
+
+  background: #1e3a8a;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  padding: 10px 18px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+}
+
+
+#computerManagementPage .cm-header-btn:hover {
+
+  background: #172554;
+
 }
 
 
@@ -54,28 +113,77 @@
 ===================================================== */
 
 #computerManagementPage #cmLoadingOverlay {
+
   position: fixed;
+
   inset: 0;
-  background: rgba(255,255,255,0.75);
+
   display: none;
+
   align-items: center;
+
   justify-content: center;
-  z-index: 9999;
+
+  background: rgba(255,255,255,0.75);
+
+  backdrop-filter: blur(3px);
+
+  z-index: 99999;
+
 }
+
 
 #computerManagementPage .loading-box {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
   background: white;
-  padding: 25px 35px;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-  font-size: 16px;
-  font-weight: bold;
+
+  padding: 20px 28px;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 15px 40px rgba(15,23,42,.18);
+
+  font-weight: 600;
+
 }
 
 
-/* =========================================
-   COLORFUL STATISTICS
-========================================= */
+#computerManagementPage .cm-spinner {
+
+  width: 22px;
+
+  height: 22px;
+
+  border: 3px solid #dbeafe;
+
+  border-top-color: #2563eb;
+
+  border-radius: 50%;
+
+  animation: cmSpin 0.8s linear infinite;
+
+}
+
+
+@keyframes cmSpin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
 
 #computerManagementPage .stats-grid {
 
@@ -93,324 +201,302 @@
 
 #computerManagementPage .stat-card {
 
-  position: relative;
+  display: flex;
 
-  overflow: hidden;
+  align-items: center;
 
-  border-radius: 14px;
+  gap: 15px;
 
-  padding: 20px;
+  min-height: 105px;
 
-  min-height: 115px;
+  padding: 18px;
 
   background: white;
 
-  border:
-    1px solid rgba(0,0,0,0.04);
+  border-radius: 14px;
+
+  border: 1px solid #edf0f5;
 
   box-shadow:
-    0 6px 20px rgba(30,41,59,0.08);
+    0 5px 20px rgba(15,23,42,.07);
 
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: 0.25s;
 
 }
 
 
 #computerManagementPage .stat-card:hover {
 
-  transform:
-    translateY(-4px);
+  transform: translateY(-4px);
 
   box-shadow:
-    0 12px 28px rgba(30,41,59,0.14);
+    0 12px 30px rgba(15,23,42,.12);
 
 }
 
 
-#computerManagementPage .stat-card:nth-child(1) {
+#computerManagementPage .stat-icon {
 
-  border-left:
-    5px solid #2563eb;
+  width: 52px;
 
-}
+  height: 52px;
 
+  display: flex;
 
-#computerManagementPage .stat-card:nth-child(2) {
+  align-items: center;
 
-  border-left:
-    5px solid #f59e0b;
+  justify-content: center;
 
-}
+  border-radius: 50%;
 
-
-#computerManagementPage .stat-card:nth-child(3) {
-
-  border-left:
-    5px solid #8b5cf6;
+  font-size: 21px;
 
 }
 
 
-#computerManagementPage .stat-card:nth-child(4) {
+#computerManagementPage .stat-content {
 
-  border-left:
-    5px solid #10b981;
-
-}
-
-
-#computerManagementPage .stat-card:nth-child(5) {
-
-  border-left:
-    5px solid #ef4444;
-
-}
-
-
-#computerManagementPage .stat-title {
-
-  color: #64748b;
-
-  font-size: 13px;
-
-  font-weight: 600;
-
-  margin-bottom: 12px;
+  flex: 1;
 
 }
 
 
 #computerManagementPage .stat-value {
 
-  font-size: 32px;
+  font-size: 26px;
 
   font-weight: 700;
 
-  color: #1e293b;
+  color: #172554;
+
+  margin-bottom: 5px;
 
 }
 
 
+#computerManagementPage .stat-title {
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  color: #64748b;
+
+}
+
+
+/* COLORS */
+
+#computerManagementPage .stat-blue {
+  border-left: 4px solid #2563eb;
+}
+
+#computerManagementPage .stat-blue .stat-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+
+#computerManagementPage .stat-orange {
+  border-left: 4px solid #f59e0b;
+}
+
+#computerManagementPage .stat-orange .stat-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+
+#computerManagementPage .stat-purple {
+  border-left: 4px solid #8b5cf6;
+}
+
+#computerManagementPage .stat-purple .stat-icon {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+
+#computerManagementPage .stat-green {
+  border-left: 4px solid #10b981;
+}
+
+#computerManagementPage .stat-green .stat-icon {
+  background: #d1fae5;
+  color: #059669;
+}
+
+
+#computerManagementPage .stat-red {
+  border-left: 4px solid #ef4444;
+}
+
+#computerManagementPage .stat-red .stat-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+
 /* =====================================================
-   SUMMARY / DISTRIBUTION
+   ANALYTICS
 ===================================================== */
 
-#computerManagementPage .summary-grid {
+#computerManagementPage .analytics-grid {
 
   display: grid;
 
   grid-template-columns:
-    repeat(auto-fit, minmax(250px, 1fr));
+    repeat(4, minmax(0, 1fr));
 
-  gap: 15px;
-
-  margin-bottom: 20px;
-
-}
-
-
-#computerManagementPage .summary-card {
-
-  background: white;
-
-  border-radius: 10px;
-
-  padding: 20px;
-
-  box-shadow:
-    0 2px 8px rgba(0,0,0,0.08);
-
-  min-height: 140px;
-
-}
-
-
-#computerManagementPage .summary-card h3 {
-
-  margin-bottom: 15px;
-
-  font-size: 17px;
-
-}
-
-
-#computerManagementPage .summary-item {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  padding: 9px 0;
-
-  border-bottom:
-    1px solid #eee;
-
-  font-size: 13px;
-
-}
-
-
-#computerManagementPage .summary-item:last-child {
-
-  border-bottom: none;
-
-}
-
-
-#computerManagementPage .summary-count {
-
-  font-weight: bold;
-
-}
-/* =====================================================
-   ANALYTICS DASHBOARD
-===================================================== */
-
-#computerManagementPage .analytics-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
+
   margin-bottom: 22px;
+
 }
 
 
 #computerManagementPage .analytics-card {
-  background: #ffffff;
+
+  background: white;
+
   border-radius: 14px;
+
   padding: 18px;
-  border: 1px solid #e8edf3;
-  box-shadow: 0 5px 18px rgba(30, 41, 59, 0.07);
+
+  border: 1px solid #edf0f5;
+
+  box-shadow:
+    0 5px 18px rgba(15,23,42,.06);
+
   min-width: 0;
-  overflow: hidden;
+
 }
 
 
 #computerManagementPage .analytics-card-wide {
+
   grid-column: span 2;
+
 }
 
 
 #computerManagementPage .analytics-header {
-  margin-bottom: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+
 }
 
 
 #computerManagementPage .analytics-header h3 {
-  font-size: 16px;
+
+  font-size: 15px;
+
   font-weight: 700;
+
   color: #1e293b;
-  margin-bottom: 5px;
+
+  margin-bottom: 4px;
+
 }
 
 
 #computerManagementPage .analytics-header p {
-  font-size: 12px;
+
+  font-size: 11px;
+
   color: #94a3b8;
+
 }
 
 
-/* =====================================================
-   NORMAL CHART CONTAINER
-===================================================== */
+#computerManagementPage .analytics-icon {
 
-#computerManagementPage .chart-container {
-  position: relative;
-  width: 100%;
-  height: 260px;
+  width: 35px;
+
+  height: 35px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
 }
 
 
-#computerManagementPage .chart-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-
-/* =====================================================
-   BUILDING CHART
-===================================================== */
-
+#computerManagementPage .chart-container,
 #computerManagementPage .building-chart-container {
+
   position: relative;
+
   width: 100%;
-  height: 260px;
-}
 
+  height: 250px;
 
-#computerManagementPage .building-chart-container canvas {
-  width: 100% !important;
-  height: 100% !important;
 }
 
 
 /* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media (max-width: 1500px) {
-
-  #computerManagementPage .analytics-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-}
-
-
-@media (max-width: 900px) {
-
-  #computerManagementPage .analytics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  #computerManagementPage .analytics-card-wide {
-    grid-column: span 1;
-  }
-
-}
-
-
-@media (max-width: 600px) {
-
-  #computerManagementPage .analytics-card {
-    padding: 14px;
-  }
-
-  #computerManagementPage .chart-container,
-  #computerManagementPage .building-chart-container {
-    height: 230px;
-  }
-
-}
-
-/* =====================================================
-   FILTER SECTION
+   FILTER
 ===================================================== */
 
 #computerManagementPage .filter-card {
 
   background: white;
 
+  border-radius: 14px;
+
   padding: 20px;
 
-  border-radius: 10px;
+  margin-bottom: 22px;
 
-  margin-bottom: 20px;
+  border: 1px solid #edf0f5;
 
   box-shadow:
-    0 2px 8px rgba(0,0,0,0.08);
+    0 5px 18px rgba(15,23,42,.06);
+
+}
+
+
+#computerManagementPage .filter-header {
+
+  margin-bottom: 18px;
 
 }
 
 
 #computerManagementPage .filter-title {
 
-  font-size: 17px;
+  display: flex;
 
-  font-weight: bold;
+  align-items: center;
 
-  margin-bottom: 15px;
+  gap: 9px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: #1e293b;
+
+}
+
+
+#computerManagementPage .filter-title i {
+
+  color: #2563eb;
 
 }
 
@@ -420,104 +506,104 @@
   display: grid;
 
   grid-template-columns:
-    repeat(4, minmax(180px, 1fr));
+    repeat(4, minmax(170px, 1fr));
 
-  gap: 12px;
+  gap: 14px;
+
+}
+
+
+#computerManagementPage .filter-field {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+}
+
+
+#computerManagementPage .filter-field label {
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  color: #64748b;
+
+}
+
+
+#computerManagementPage .filter-field input,
+#computerManagementPage .filter-field select {
 
   width: 100%;
 
-  align-items: start;
+  height: 40px;
+
+  padding: 0 12px;
+
+  border-radius: 8px;
+
+  border: 1px solid #dbe1ea;
+
+  background: #fff;
+
+  color: #334155;
+
+  font-size: 13px;
+
+  outline: none;
 
 }
 
 
-@media(max-width: 1100px) {
+#computerManagementPage .filter-field input:focus,
+#computerManagementPage .filter-field select:focus {
 
-  #computerManagementPage .stats-grid {
+  border-color: #2563eb;
 
-    grid-template-columns:
-      repeat(3, minmax(180px, 1fr));
-
-  }
-
-
-  #computerManagementPage .filter-grid {
-
-    grid-template-columns:
-      repeat(3, minmax(180px, 1fr));
-
-  }
+  box-shadow:
+    0 0 0 3px rgba(37,99,235,.1);
 
 }
 
 
-@media(max-width: 800px) {
+#computerManagementPage .search-input-wrapper {
 
-  #computerManagementPage .stats-grid {
-
-    grid-template-columns:
-      repeat(2, minmax(180px, 1fr));
-
-  }
-
-
-  #computerManagementPage .filter-grid {
-
-    grid-template-columns:
-      repeat(2, minmax(180px, 1fr));
-
-  }
+  position: relative;
 
 }
 
 
-@media(max-width: 600px) {
+#computerManagementPage .search-input-wrapper i {
 
-  #computerManagementPage .stats-grid {
+  position: absolute;
 
-    grid-template-columns: 1fr;
+  top: 50%;
 
-  }
+  left: 12px;
 
+  transform: translateY(-50%);
 
-  #computerManagementPage .filter-grid {
+  color: #94a3b8;
 
-    grid-template-columns: 1fr;
-
-  }
-
-
-  #computerManagementPage .summary-grid {
-
-    grid-template-columns: 1fr;
-
-  }
+  font-size: 13px;
 
 }
 
 
-#computerManagementPage .filter-grid input,
-#computerManagementPage .filter-grid select {
+#computerManagementPage .search-input-wrapper input {
 
-  width: 100%;
-
-  padding: 10px;
-
-  border:
-    1px solid #ddd;
-
-  border-radius: 6px;
-
-  font-size: 14px;
-
-  background: white;
+  padding-left: 36px;
 
 }
 
+
+/* BUTTONS */
 
 #computerManagementPage .filter-buttons {
-
-  margin-top: 20px;
 
   display: flex;
 
@@ -525,31 +611,39 @@
 
   gap: 10px;
 
-  width: 100%;
+  margin-top: 20px;
 
 }
 
 
 #computerManagementPage button {
 
-  border: none;
-
-  border-radius: 6px;
-
-  padding: 10px 16px;
+  font-family: inherit;
 
   cursor: pointer;
 
-  font-size: 14px;
+}
 
-  transition: 0.2s;
+
+#computerManagementPage .btn-primary,
+#computerManagementPage .btn-secondary {
+
+  border: none;
+
+  border-radius: 8px;
+
+  padding: 10px 18px;
+
+  font-size: 13px;
+
+  font-weight: 600;
 
 }
 
 
 #computerManagementPage .btn-primary {
 
-  background: #2563eb;
+  background: #1d4ed8;
 
   color: white;
 
@@ -558,43 +652,48 @@
 
 #computerManagementPage .btn-primary:hover {
 
-  background: #1d4ed8;
+  background: #1e40af;
 
 }
 
 
 #computerManagementPage .btn-secondary {
 
-  background: #e5e7eb;
+  background: #f1f5f9;
 
-  color: #333;
+  color: #475569;
 
 }
 
 
 #computerManagementPage .btn-secondary:hover {
 
-  background: #d1d5db;
+  background: #e2e8f0;
 
 }
 
 
-#computerManagementPage .btn-view {
+/* =====================================================
+   WORKSPACE
+===================================================== */
 
-  background: #059669;
+#computerManagementPage .cm-main-workspace {
 
-  color: white;
+  display: grid;
 
-  padding: 7px 12px;
+  grid-template-columns: minmax(0, 1fr);
 
-  font-size: 12px;
+  gap: 20px;
+
+  align-items: start;
 
 }
 
 
-#computerManagementPage .btn-view:hover {
+#computerManagementPage .cm-main-workspace.panel-open {
 
-  background: #047857;
+  grid-template-columns:
+    minmax(0, 1fr) 360px;
 
 }
 
@@ -607,12 +706,14 @@
 
   background: white;
 
-  border-radius: 10px;
+  border-radius: 14px;
 
-  padding: 20px;
+  padding: 18px;
+
+  border: 1px solid #edf0f5;
 
   box-shadow:
-    0 2px 8px rgba(0,0,0,0.08);
+    0 5px 18px rgba(15,23,42,.06);
 
 }
 
@@ -625,27 +726,36 @@
 
   align-items: center;
 
-  margin-bottom: 15px;
-
-  flex-wrap: wrap;
-
-  gap: 10px;
+  margin-bottom: 16px;
 
 }
 
 
 #computerManagementPage .table-header h3 {
 
-  font-size: 18px;
+  font-size: 16px;
+
+  color: #1e293b;
+
+  margin-bottom: 5px;
+
+}
+
+
+#computerManagementPage .table-header h3 i {
+
+  color: #2563eb;
+
+  margin-right: 6px;
 
 }
 
 
 #computerManagementPage #cmComputerCount {
 
-  color: #666;
+  font-size: 12px;
 
-  font-size: 14px;
+  color: #64748b;
 
 }
 
@@ -663,46 +773,116 @@
 
   width: 100%;
 
-  border-collapse: collapse;
+  min-width: 1100px;
 
-  min-width: 1000px;
+  border-collapse: separate;
+
+  border-spacing: 0;
 
 }
 
 
 #computerManagementPage th {
 
-  background: #f3f4f6;
+  background: #172554;
 
-  padding: 12px;
+  color: white;
+
+  padding: 13px 12px;
 
   text-align: left;
 
-  font-size: 13px;
+  font-size: 11px;
 
-  border-bottom:
-    1px solid #ddd;
+  font-weight: 700;
 
   white-space: nowrap;
 
 }
 
 
-#computerManagementPage td {
+#computerManagementPage th:first-child {
 
-  padding: 11px;
-
-  border-bottom:
-    1px solid #eee;
-
-  font-size: 13px;
+  border-radius: 8px 0 0 0;
 
 }
 
 
-#computerManagementPage tr:hover {
+#computerManagementPage th:last-child {
 
-  background: #f9fafb;
+  border-radius: 0 8px 0 0;
+
+}
+
+
+#computerManagementPage td {
+
+  padding: 12px;
+
+  border-bottom: 1px solid #eef2f7;
+
+  color: #475569;
+
+  font-size: 12px;
+
+  vertical-align: middle;
+
+}
+
+
+#computerManagementPage #cmComputerTableBody tr {
+
+  cursor: pointer;
+
+  transition: 0.15s;
+
+}
+
+
+#computerManagementPage #cmComputerTableBody tr:hover {
+
+  background: #f8fbff;
+
+}
+
+
+#computerManagementPage #cmComputerTableBody tr.cm-selected-row {
+
+  background: #dbeafe !important;
+
+  box-shadow:
+    inset 4px 0 0 #2563eb;
+
+}
+
+
+#computerManagementPage #cmComputerTableBody tr.cm-selected-row td {
+
+  font-weight: 600;
+
+}
+
+
+#computerManagementPage .btn-view {
+
+  width: 34px;
+
+  height: 32px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: #2563eb;
+
+  color: white;
+
+}
+
+
+#computerManagementPage .btn-view:hover {
+
+  background: #1d4ed8;
 
 }
 
@@ -711,192 +891,10 @@
 
   text-align: center;
 
-  padding: 30px;
+  padding: 40px;
 
-  color: #777;
+  color: #94a3b8;
 
-}
-
-
-/* =====================================================
-   MODAL
-===================================================== */
-
-#computerManagementPage #cmComputerModal {
-
-  display: none;
-
-  position: fixed;
-
-  z-index: 10000;
-
-  inset: 0;
-
-  background:
-    rgba(0,0,0,0.55);
-
-  overflow-y: auto;
-
-  padding: 30px 15px;
-
-}
-
-
-#computerManagementPage .modal-content {
-
-  background: white;
-
-  max-width: 900px;
-
-  margin: auto;
-
-  border-radius: 12px;
-
-  padding: 25px;
-
-  position: relative;
-
-}
-
-
-#computerManagementPage .modal-close {
-
-  position: absolute;
-
-  right: 20px;
-
-  top: 15px;
-
-  font-size: 28px;
-
-  cursor: pointer;
-
-  color: #666;
-
-}
-
-
-#computerManagementPage .modal-close:hover {
-
-  color: red;
-
-}
-
-
-#computerManagementPage .modal-title {
-
-  margin-bottom: 20px;
-
-  padding-bottom: 12px;
-
-  border-bottom:
-    1px solid #eee;
-
-}
-
-
-#computerManagementPage .details-grid {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit, minmax(220px, 1fr));
-
-  gap: 15px;
-
-}
-
-
-#computerManagementPage .detail-item {
-
-  background: #f8fafc;
-
-  padding: 12px;
-
-  border-radius: 7px;
-
-}
-
-
-#computerManagementPage .detail-label {
-
-  font-size: 11px;
-
-  color: #777;
-
-  text-transform: uppercase;
-
-  margin-bottom: 5px;
-
-}
-
-
-#computerManagementPage .detail-value {
-
-  font-size: 14px;
-
-  font-weight: 500;
-
-  word-break: break-word;
-
-}
-
-
-/* =====================================================
-   ERROR
-===================================================== */
-
-#computerManagementPage #cmErrorBox {
-
-  display: none;
-
-  background: #fee2e2;
-
-  color: #991b1b;
-
-  padding: 15px;
-
-  border-radius: 8px;
-
-  margin-bottom: 15px;
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media(max-width: 600px) {
-
-  #computerManagementPage .computer-management-container {
-
-    padding: 12px;
-
-  }
-
-
-  #computerManagementPage .page-header h2 {
-
-    font-size: 21px;
-
-  }
-
-}
-/* =====================================================
-   COMPUTER WORKSPACE
-===================================================== */
-
-#computerManagementPage .cm-main-workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
-  align-items: start;
-}
-
-
-#computerManagementPage .cm-main-workspace.panel-open {
-  grid-template-columns: minmax(0, 1fr) 340px;
 }
 
 
@@ -910,23 +908,20 @@
 
   background: white;
 
-  border-radius: 10px;
+  border-radius: 14px;
+
+  border: 1px solid #edf0f5;
 
   box-shadow:
-    0 2px 8px rgba(0,0,0,0.08);
-
-  min-height: 500px;
-
-  max-height:
-    calc(100vh - 40px);
+    0 5px 20px rgba(15,23,42,.08);
 
   position: sticky;
 
-  top: 20px;
+  top: 15px;
+
+  max-height: calc(100vh - 30px);
 
   overflow-y: auto;
-
-  overflow-x: hidden;
 
 }
 
@@ -941,35 +936,217 @@
 
   padding: 18px;
 
-  border-bottom:
-    1px solid #e5e7eb;
+  border-bottom: 1px solid #edf0f5;
+
+}
+
+
+#computerManagementPage .cm-panel-title-small {
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  color: #94a3b8;
+
+  margin-bottom: 5px;
 
 }
 
 
 #computerManagementPage .cm-details-panel-header h3 {
 
-  font-size: 17px;
+  font-size: 15px;
+
+  color: #172554;
 
 }
 
 
 #computerManagementPage .cm-details-panel-header button {
 
+  border: none;
+
   background: transparent;
 
-  color: #555;
+  font-size: 26px;
 
-  font-size: 24px;
+  color: #64748b;
 
-  padding: 0;
+}
+
+
+#computerManagementPage .cm-details-panel-header button:hover {
+
+  color: #dc2626;
 
 }
 
 
 #computerManagementPage #cmDetailsPanelContent {
 
-  padding: 15px;
+  padding: 14px;
+
+}
+
+
+/* DETAIL SECTIONS */
+
+#computerManagementPage .cm-detail-section {
+
+  background: #fff;
+
+  border: 1px solid #e8edf3;
+
+  border-radius: 10px;
+
+  margin-bottom: 13px;
+
+  overflow: hidden;
+
+}
+
+
+#computerManagementPage .cm-detail-section-title {
+
+  padding: 10px 12px;
+
+  background: #f8fafc;
+
+  color: #1e3a8a;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  border-bottom: 1px solid #edf0f5;
+
+}
+
+
+#computerManagementPage .cm-detail-row {
+
+  display: grid;
+
+  grid-template-columns: 110px 1fr;
+
+  gap: 10px;
+
+  padding: 9px 12px;
+
+  border-bottom: 1px solid #f1f5f9;
+
+}
+
+
+#computerManagementPage .cm-detail-row:last-child {
+
+  border-bottom: none;
+
+}
+
+
+#computerManagementPage .cm-detail-label {
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  color: #94a3b8;
+
+}
+
+
+#computerManagementPage .cm-detail-value {
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  color: #334155;
+
+  word-break: break-word;
+
+}
+
+
+/* NO SELECTION */
+
+#computerManagementPage .cm-no-selection {
+
+  text-align: center;
+
+  padding: 50px 20px;
+
+  color: #64748b;
+
+}
+
+
+#computerManagementPage .cm-no-selection-icon {
+
+  width: 65px;
+
+  height: 65px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin: auto auto 15px;
+
+  border-radius: 50%;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-size: 26px;
+
+}
+
+
+#computerManagementPage .cm-no-selection h4 {
+
+  margin-bottom: 8px;
+
+  color: #334155;
+
+}
+
+
+#computerManagementPage .cm-no-selection p {
+
+  font-size: 12px;
+
+  line-height: 1.6;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+#computerManagementPage #cmErrorBox {
+
+  display: none;
+
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  color: #b91c1c;
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  margin-bottom: 18px;
 
 }
 
@@ -978,36 +1155,34 @@
    RESPONSIVE
 ===================================================== */
 
-@media(max-width: 1200px) {
+@media (max-width: 1500px) {
 
-  #computerManagementPage .cm-main-workspace,
-  #computerManagementPage .cm-main-workspace.panel-open {
-
-    grid-template-columns: 1fr;
-
+  #computerManagementPage .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-
-  #computerManagementPage .cm-details-panel {
-
-    position: relative;
-
-    top: auto;
-
-    max-height: none;
-
+  #computerManagementPage .analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
 }
 
-/* =====================================================
-   RESPONSIVE ANALYTICS
-===================================================== */
 
-@media (max-width: 1400px) {
+@media (max-width: 1200px) {
 
-  #computerManagementPage .analytics-grid {
-    grid-template-columns: repeat(2, minmax(250px, 1fr));
+  #computerManagementPage .filter-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  #computerManagementPage .cm-main-workspace,
+  #computerManagementPage .cm-main-workspace.panel-open {
+    grid-template-columns: 1fr;
+  }
+
+  #computerManagementPage .cm-details-panel {
+    position: relative;
+    top: auto;
+    max-height: none;
   }
 
 }
@@ -1019,31 +1194,48 @@
     grid-template-columns: 1fr;
   }
 
-
   #computerManagementPage .analytics-card-wide {
     grid-column: span 1;
   }
 
-}
-#computerManagementPage #cmComputerTableBody tr {
-  cursor: pointer;
-}
+  #computerManagementPage .filter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-#computerManagementPage #cmComputerTableBody tr:hover {
-  background: #eef4ff;
-}
-/* =========================================
-   SELECTED COMPUTER ROW
-========================================= */
-
-#computerManagementPage #cmComputerTableBody tr.cm-selected-row {
-  background: #dbeafe !important;
-  box-shadow: inset 4px 0 0 #2563eb;
-}
-
-#computerManagementPage #cmComputerTableBody tr.cm-selected-row td {
-  font-weight: 600;
 }
 
 
+@media (max-width: 650px) {
+
+  #computerManagementPage .computer-management-container {
+    padding: 12px;
+  }
+
+  #computerManagementPage .cm-page-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #computerManagementPage .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #computerManagementPage .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #computerManagementPage .filter-buttons {
+    justify-content: stretch;
+  }
+
+  #computerManagementPage .filter-buttons button {
+    flex: 1;
+  }
+
+  #computerManagementPage .cm-detail-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+}
 </style>
